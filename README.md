@@ -1,0 +1,2 @@
+# ebf
+Empirical Bayes factors
