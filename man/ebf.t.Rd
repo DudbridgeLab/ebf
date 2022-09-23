@@ -11,37 +11,42 @@ ebf.t(
   h1 = NULL,
   df = NULL,
   shrink = FALSE,
-  index = NULL
+  index = NULL,
+  npoints = 1000
 )
 }
 \arguments{
 \item{x}{Vector of statistics for which EBFs will be calculated.}
 
-\item{se}{Vector of standard errors associated with \code{x}.}
+\item{se}{Vector of standard errors associated with \code{x}.  Default is 1.}
 
 \item{h0}{A vector with two elements, giving the lower and upper
 bounds of the null hypothesis.}
 
 \item{h1}{A vector with two elements, giving the lower and upper bounds of
-the alternative hypothesis to \code{h0}.  If unspecified, the alternative
+the alternative hypothesis.  If unspecified, the alternative
 hypothesis is the complement of \code{h0}.}
 
 \item{df}{Vector of degrees of freedom.  Defaults to \code{Inf}.}
 
-\item{shrink}{If \code{TRUE}, uses information from all elements of \code{x}
-when calculating each individual EBF.}
+\item{shrink}{If \code{TRUE}, uses the entire distribution of \code{x}
+to calculate each individual EBF.}
 
-\item{index}{Vector of indices selecting a subset of \code{x}.}
+\item{index}{Vector of indices of elements of \code{x} for which to calculate shrinkage EBFs.}
+
+\item{npoints}{Number of points to use in calculate shrinkage EBFs.
+Default is \code{min(length(x), 1000)}.}
 }
 \value{
 An object of class "ebf" containing the following components:
   \itemize{
+  \item{\code{index} Indices of elements in \code{x} for which EBFs are calculated.}
     \item{\code{ebf} Empirical Bayes factors for the elements of \code{x}.}
-    \item{\code{ebf.units} \code{ebf} expressed as units of evidence.}
+    \item{\code{ebf.units} Expressed as units of evidence.}
     \item{\code{ebf.shrink} Shrunken EBFs if specified by \code{shrink==TRUE}.}
-    \item{\code{ebf.shrink.units} \code{ebf.shrink} expressed as units of evidence.}
-    \item{\code{p} P-values.}
-    \item{\code{p.log10} -log10 of \code{p}.}
+    \item{\code{ebf.shrink.units} Expressed as units of evidence.}
+    \item{\code{p} P-values.  This is empty if \code{h0} is an interval.}
+    \item{\code{p.log10} Expressed in -log10 units.}
   }
 }
 \description{
@@ -50,6 +55,8 @@ Calculates empirical Bayes factors (EBFs) for univariate t tests.
 \references{
 Dudbridge F (submitted) Units of evidence and expected Bayes factors for
 objective reporting of statistical evidence.
+
+Dudbridge F (unpublished) Empirical Bayes factors.
 }
 \author{
 Frank Dudbridge

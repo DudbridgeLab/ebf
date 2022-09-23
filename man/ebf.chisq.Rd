@@ -4,22 +4,21 @@
 \alias{ebf.chisq}
 \title{Empirical Bayes factors for chi-squared tests}
 \usage{
-ebf.chisq(x, df = NULL, index = NULL)
+ebf.chisq(x, df = NULL)
 }
 \arguments{
 \item{x}{Vector of chi-squared statistics for which EBFs will be calculated.}
 
 \item{df}{Vector of degrees of freedom. Defaults to 1.}
-
-\item{index}{Vector of indices selecting a subset of \code{x}.}
 }
 \value{
 An object of class "ebf" containing the following components:
   \itemize{
+  \item{\code{index} Indices of elements in \code{x} for which EBFs are calculated.}
     \item{\code{ebf} Empirical Bayes factors for the elements of \code{x}.}
-    \item{\code{ebf.units} \code{EBF} expressed as units of evidence.}
-    \item{\code{p} P-values.}
-    \item{\code{p.log10} -log10 of \code{p}.}
+    \item{\code{ebf.units} Expressed as units of evidence.}
+    \item{\code{p} P-values.  This is empty if \code{h0} is an interval.}
+    \item{\code{p.log10} Expressed in -log10 units.}
   }
 }
 \description{
@@ -28,6 +27,8 @@ Calculates empirical Bayes factors (EBFs) for chi-squared tests.
 \references{
 Dudbridge F (submitted) Units of evidence and expected Bayes factors for
 objective reporting of statistical evidence.
+
+Dudbridge F (unpublished) Empirical Bayes factors.
 }
 \author{
 Frank Dudbridge

@@ -12,41 +12,46 @@ ebf(
   test = c("normal", "t", "chisq"),
   df = NULL,
   shrink = FALSE,
+  npoints = 1000,
   index = NULL
 )
 }
 \arguments{
 \item{x}{Vector of statistics for which EBFs will be calculated.}
 
-\item{se}{Vector of standard errors associated with \code{x}.}
+\item{se}{Vector of standard errors associated with \code{x}.  Default is 1.}
 
 \item{h0}{A vector with two elements, giving the lower and upper
 bounds of the null hypothesis.}
 
 \item{h1}{A vector with two elements, giving the lower and upper bounds of
-the alternative hypothesis to \code{h0}.  If unspecified, the alternative
+the alternative hypothesis.  If unspecified, the alternative
 hypothesis is the complement of \code{h0}.}
 
-\item{test}{Type of EBF to compute.  Can be "Normal" (default), "t" or "chisq".}
+\item{test}{Type of EBF to compute.  Can be "normal" (default), "t" or "chisq".}
 
 \item{df}{Vector of degrees of freedom for t or chi-squared tests.
 Defaults to \code{Inf} for t test and 1 for chi-squared tests.
-For the t test, values of \code{df} over 30 are set to \code{Inf}, equivalent to the Normal test.}
+For the t test, values of \code{df} over 100 are set to \code{Inf}, equivalent to the Normal test.}
 
-\item{shrink}{If \code{TRUE}, uses information from all elements of \code{x}
-when calculating each individual EBF.}
+\item{shrink}{If \code{TRUE}, uses the entire distribution of \code{x}
+to calculate each individual EBF.}
 
-\item{index}{Vector of indices selecting a subset of \code{x}.}
+\item{npoints}{Number of points to use in calculate shrinkage EBFs.
+Default is \code{min(length(x), 1000)}.}
+
+\item{index}{Vector of indices of elements of \code{x} for which to calculate shrinkage EBFs.}
 }
 \value{
 An object of class "ebf" containing the following components:
   \itemize{
+  \item{\code{index} Indices of elements in \code{x} for which EBFs are calculated.}
     \item{\code{ebf} Empirical Bayes factors for the elements of \code{x}.}
-    \item{\code{ebf.units} \code{EBF} expressed as units of evidence.}
+    \item{\code{ebf.units} Expressed as units of evidence.}
     \item{\code{ebf.shrink} Shrunken EBFs if specified by \code{shrink==TRUE}.}
-    \item{\code{ebf.shrink.units} \code{ebf.shrink} expressed as units of evidence.}
+    \item{\code{ebf.shrink.units} Expressed as units of evidence.}
     \item{\code{p} P-values.  This is empty if \code{h0} is an interval.}
-    \item{\code{p.log10} -log10 of \code{p}.}
+    \item{\code{p.log10} Expressed in -log10 units.}
   }
 }
 \description{
@@ -68,11 +73,15 @@ To test negative values against positive values, use \code{h0=c(0,Inf)}.
 
 For chi-squared tests, \code{h0}, \code{h1} and \code{shrink} are ignored,
 
-If \code{shrink==TRUE} the calculation may be very
-time-consuming when \code{length(x)} is large.
+If \code{shrink==TRUE} the calculation is of order \code{length(x)^2}
+and may be very time-consuming.  To reduce the computation a subset of
+\code{x} may be used to calculate the shrinkage EBFs.
+By default a maximum of 1000 points is used, taken from the quantiles of the
+simple EBFs.  This number can be varied with the \code{npoints} option.
+
 It can be restricted to a subset of \code{x} by using \code{index}.
 The shrunken EBFs are only calculated for the specified elements of \code{x},
-however the full set of statistics in \code{x} is used in calculating those EBFs.
+however the full distribution of \code{x} is used in calculating those EBFs.
 
 Units of evidence are EBFs on the log scale with base 3.73.  One unit updates
 weaker belief to stronger belief, or weaker disbelief to weaker belief,
@@ -82,6 +91,8 @@ See Dudbridge (submitted) for further details.
 \references{
 Dudbridge F (submitted) Units of evidence and expected Bayes factors for
 objective reporting of statistical evidence.
+
+Dudbridge F (unpublished) Empirical Bayes factors.
 }
 \author{
 Frank Dudbridge
