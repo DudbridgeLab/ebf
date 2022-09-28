@@ -8,7 +8,7 @@ ebf.norm(
   x,
   se = 1,
   index = NULL,
-  h0 = c(0, 0),
+  h0 = 0,
   h1 = NULL,
   shrink = FALSE,
   npoints = 1000
@@ -22,14 +22,16 @@ ebf.norm(
 \item{index}{Vector of indices in \code{x}.  EBFs are calculated only for
 those elements. If \code{NULL}, EBFs are calculated for all elements.}
 
-\item{h0}{A vector with two elements, giving the lower and upper
+\item{h0}{If a scalar, the value of a point null hypothesis.
+If a vector with two elements, the lower and upper
 bounds of the null hypothesis.}
 
-\item{h1}{A vector with two elements, giving the lower and upper bounds of
+\item{h1}{If a scalar, the value of a point alternative hypothesis.
+If a vector with two elements, the lower and upper bounds of
 the alternative hypothesis.  If \code{NULL} (default), the alternative
 hypothesis is the complement of \code{h0}.
 
-The default test has \code{h0=c(0,0)}, with two-sided alternative.
+The default test has \code{h0=0}, with two-sided alternative.
 For one-sided alternatives, use \code{h1=c(0,-Inf)} or \code{h1=c(-Inf,0)}.
 To test positive values against negative values, use \code{h0=c(-Inf,0)}.
 In this case \code{h1} defaults to \code{c(0,Inf)}.
@@ -52,7 +54,7 @@ in calculating those EBFs.}
 Default is \code{min(length(x), 1000)}.}
 }
 \value{
-An object of class "ebf" containing the following components:
+A data frame containing the following components:
   \itemize{
   \item{\code{index} Indices of elements in \code{x} for which EBFs are calculated.}
     \item{\code{ebf} Empirical Bayes factors for the elements of \code{x}.}
@@ -61,10 +63,10 @@ An object of class "ebf" containing the following components:
      weaker belief to stronger belief, or weaker disbelief to weaker belief,
      according to a rational definition of weaker and stronger belief.
      See references for further details.}
-    \item{\code{ebf.shrink} Shrunken EBFs if specified by \code{shrink==TRUE}.}
-    \item{\code{ebf.shrink.units} Expressed as units of evidence.}
     \item{\code{p} P-values.  This is empty if \code{h0} is an interval.}
     \item{\code{p.log10} Expressed in -log10 units.}
+    \item{\code{ebf.shrink} Shrunken EBFs if specified by \code{shrink==TRUE}.}
+    \item{\code{ebf.shrink.units} Expressed as units of evidence.}
   }
 }
 \description{

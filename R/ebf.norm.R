@@ -15,12 +15,13 @@
 ebf.norm <- function(x,
                      se=1,
                      index=NULL,
-                     h0=c(0,0),
+                     h0=0,
                      h1=NULL,
                      shrink=FALSE,
                      npoints=1000) {
 
-  if (is.null(se)) se=1
+  if (length(h0) == 1) h0 = c(h0, h0)
+  if (length(h1) == 1) h1 = c(h1, h1)
   if (is.null(index)) index=1:length(x)
 
   # expand into a vector
@@ -96,13 +97,14 @@ ebf.norm <- function(x,
     ebf.shrink.units = log(ebf.shrink) / log((sqrt(3)+1)/(sqrt(3)-1))
   }
 
-  result = list(index =  index,
+  result = data.frame(index =  index,
                 ebf = ebf[index],
                 ebf.units = ebf.units[index],
-                ebf.shrink = ebf.shrink,
-                ebf.shrink.units = ebf.shrink.units,
                 p = p[index],
                 p.log10 = p.log10[index])
-  class(result) = ("ebf")
+
+  if (shrink == TRUE) result = data.frame(result,
+                                          ebf.shrink,
+                                          ebf.shrink.units)
   result
 }

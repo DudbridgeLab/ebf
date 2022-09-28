@@ -12,11 +12,12 @@
 #' @param size Vector containing the numbers of trials in each test.
 #' The numbers of successes are contained in \code{x}.
 #'
-#' @param h1 A vector with two elements, giving the lower and upper bounds of
+#' @param h1 If a scalar, the value of a point alternative hypothesis.
+#' If a vector with two elements, the lower and upper bounds of
 #' the alternative hypothesis.  If \code{NULL} (default), the alternative
 #' hypothesis is the complement of \code{h0}.
 #'
-#' The default test has \code{h0=c(0.5,0.5)}, with two-sided alternative.
+#' The default test has \code{h0=0.5}, with two-sided alternative.
 #' For one-sided alternatives, use \code{h1=c(0.5,1)} or \code{h1=c(0,0.5)}.
 #' To test higher values against lower values, use \code{h0=c(0,0.5)}.
 #' In this case \code{h1} defaults to \code{c(0.5,1)}.
@@ -33,13 +34,15 @@
 ebf.binom <- function(x,
                   size,
                   index=NULL,
-                  h0=c(0.5,0.5),
+                  h0=0.5,
                   h1=NULL,
                   shrink=FALSE,
                   npoints=1000,
                   shape=1
                   ) {
 
+  if (length(h0) == 1) h0 = c(h0, h0)
+  if (length(h1) == 1) h1 = c(h1, h1)
   if (is.null(index)) index=1:length(x)
 
   # expand to a vector
@@ -116,13 +119,15 @@ ebf.binom <- function(x,
     ebf.shrink.units = log(ebf.shrink) / log((sqrt(3)+1)/(sqrt(3)-1))
   }
 
-  result = list(index = index,
-                ebf = ebf[index],
-                ebf.units = ebf.units[index],
-                ebf.shrink = ebf.shrink,
-                ebf.shrink.units = ebf.shrink.units,
-                p = p[index],
-                p.log10 = p.log10[index])
-  class(result) = ("ebf")
+  result = data.frame(index =  index,
+                      ebf = ebf[index],
+                      ebf.units = ebf.units[index],
+                      p = p[index],
+                      p.log10 = p.log10[index])
+
+  if (shrink == TRUE) result = data.frame(result,
+                                          ebf.shrink,
+                                          ebf.shrink.units)
+
   result
 }

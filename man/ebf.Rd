@@ -6,15 +6,17 @@
 \title{ebf}
 \description{
 Package for calculating empirical Bayes factors (EBFs) for a set of statistics.
-Normal, t and chi-squared tests are available.
+Normal, t, binomial and chi-squared tests are available.
 Two-sided, one-sided and interval hypotheses can be tested.
 }
-\section{Main functions}{
+\section{Functions}{
 
 
 \code{\link{ebf.norm}}
 
 \code{\link{ebf.t}}
+
+\code{\link{ebf.binom}}
 
 \code{\link{ebf.chisq}}
 }

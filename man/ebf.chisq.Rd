@@ -15,7 +15,7 @@ ebf.chisq(x, df = 1, index = NULL)
 those elements. If \code{NULL}, EBFs are calculated for all elements.}
 }
 \value{
-An object of class "ebf" containing the following components:
+A data frame containing the following components:
   \itemize{
   \item{\code{index} Indices of elements in \code{x} for which EBFs are calculated.}
     \item{\code{ebf} Empirical Bayes factors for the elements of \code{x}.}

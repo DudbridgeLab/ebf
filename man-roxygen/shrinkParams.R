@@ -1,4 +1,5 @@
-#' @param h0 A vector with two elements, giving the lower and upper
+#' @param h0 If a scalar, the value of a point null hypothesis.
+#' If a vector with two elements, the lower and upper
 #' bounds of the null hypothesis.
 #' @param shrink If \code{TRUE}, uses the entire distribution of \code{x}
 #' to calculate each individual EBF.
@@ -17,7 +18,7 @@
 #' Default is \code{min(length(x), 1000)}.
 #'
 #'
-#' @return An object of class "ebf" containing the following components:
+#' @return A data frame containing the following components:
 #'   \itemize{
 #'   \item{\code{index} Indices of elements in \code{x} for which EBFs are calculated.}
 #'     \item{\code{ebf} Empirical Bayes factors for the elements of \code{x}.}
@@ -26,8 +27,8 @@
 #'      weaker belief to stronger belief, or weaker disbelief to weaker belief,
 #'      according to a rational definition of weaker and stronger belief.
 #'      See references for further details.}
-#'     \item{\code{ebf.shrink} Shrunken EBFs if specified by \code{shrink==TRUE}.}
-#'     \item{\code{ebf.shrink.units} Expressed as units of evidence.}
 #'     \item{\code{p} P-values.  This is empty if \code{h0} is an interval.}
 #'     \item{\code{p.log10} Expressed in -log10 units.}
+#'     \item{\code{ebf.shrink} Shrunken EBFs if specified by \code{shrink==TRUE}.}
+#'     \item{\code{ebf.shrink.units} Expressed as units of evidence.}
 #'   }

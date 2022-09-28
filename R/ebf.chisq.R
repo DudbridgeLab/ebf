@@ -6,7 +6,7 @@
 #'
 #' @param df Vector of degrees of freedom. Defaults to 1.
 #'
-#' @return An object of class "ebf" containing the following components:
+#' @return A data frame containing the following components:
 #'   \itemize{
 #'   \item{\code{index} Indices of elements in \code{x} for which EBFs are calculated.}
 #'     \item{\code{ebf} Empirical Bayes factors for the elements of \code{x}.}
@@ -34,11 +34,15 @@ ebf.chisq <- function(x,
   p = pchisq(x, df, lower=FALSE)
   p.log10 = -log(p)/log(10)
 
-  result = list(index = index,
-                ebf = ebf[index],
-                ebf.units = ebf.units[index],
-                p = p[index],
-                p.log10 = p.log10[index])
-  class(result) = ("ebf")
+  result = data.frame(index =  index,
+                      ebf = ebf[index],
+                      ebf.units = ebf.units[index],
+                      p = p[index],
+                      p.log10 = p.log10[index])
+
+  if (shrink == TRUE) result = data.frame(result,
+                                          ebf.shrink,
+                                          ebf.shrink.units)
+
   result
 }
