@@ -28,7 +28,7 @@ Binomial test of `k` successes in `n` trials, null hypothesis of probability 0.5
 
 Null hypothesis of probability 0.25
 
-`ebf.binom(k, n, h0=c(0.25, 0.25))`
+`ebf.binom(k, n, h0=0.25)`
 
 Chi-square test
 
