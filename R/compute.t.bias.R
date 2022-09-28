@@ -1,6 +1,6 @@
 #' Compute EBF bias for t tests
 #'
-#' Compute the bias in the log posterior mean likelihood for t tests.
+#' Computes the bias in the log posterior mean likelihood for t tests.
 #'
 #' Pre-computed results for 1 to 100 degrees of freedom are in the
 #' \code{ebf::t.bias} object.
@@ -11,7 +11,7 @@
 #'
 #' @import stats
 #'
-#' @return A data frame with df in the first column and bias in the second.
+#' @return A data frame with \code{df} in the first column and bias in the second.
 #'
 #' @author Frank Dudbridge
 #'
@@ -46,6 +46,6 @@ compute.t.bias <- function(df=1:100) {
 
   bias = PBF - EBF
 
-  bias =  data.frame(df=df, bias=bias)
+  bias =  data.frame(bias=bias, row.names=df)
   bias
 }

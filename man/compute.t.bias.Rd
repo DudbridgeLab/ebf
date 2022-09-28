@@ -10,10 +10,10 @@ compute.t.bias(df = 1:100)
 \item{df}{Vector of degrees of freedom for which to estimate bias.}
 }
 \value{
-A data frame with df in the first column and bias in the second.
+A data frame with \code{df} in the first column and bias in the second.
 }
 \description{
-Compute the bias in the log posterior mean likelihood for t tests.
+Computes the bias in the log posterior mean likelihood for t tests.
 }
 \details{
 Pre-computed results for 1 to 100 degrees of freedom are in the

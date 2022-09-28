@@ -2,7 +2,8 @@
 #'
 #' Calculates empirical Bayes factors (EBFs) for chi-squared tests.
 #'
-#' @param x Vector of chi-squared statistics for which EBFs will be calculated.
+#' @template allParams
+#'
 #' @param df Vector of degrees of freedom. Defaults to 1.
 #'
 #' @return An object of class "ebf" containing the following components:
@@ -22,9 +23,10 @@
 
 
 ebf.chisq <- function(x,
-                      df=NULL) {
+                      df=1,
+                      index=NULL) {
 
-  if (is.null(df)) df = 1
+  if (is.null(index)) index=1:length(x)
 
   ebf = exp((x-df)/2) / sqrt(2)^df
   ebf.units = log(ebf) / log((sqrt(3)+1)/(sqrt(3)-1))
@@ -33,10 +35,10 @@ ebf.chisq <- function(x,
   p.log10 = -log(p)/log(10)
 
   result = list(index = index,
-                ebf = ebf,
-                ebf.units = ebf.units,
-                p = p,
-                p.log10 = p.log10)
+                ebf = ebf[index],
+                ebf.units = ebf.units[index],
+                p = p[index],
+                p.log10 = p.log10[index])
   class(result) = ("ebf")
   result
 }

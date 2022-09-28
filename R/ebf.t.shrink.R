@@ -1,73 +1,51 @@
 # Calculate t EBFs with shrinkage
 
-ebf.t.shrink <- function(x, se, xmin, xmax, df, points, index, complement=FALSE) {
+ebf.t.shrink <- function(x, se, df, index, xmin, xmax, points, complement=FALSE) {
 
-  if (FALSE) {
-    # posterior mean likelihoods
-    pml = matrix(nrow=length(x), ncol=length(x))
-    for(i in 1:length(x))
-      for(j in 1:length(x))
-        if(complement == FALSE) {
-          pml[i,j] = t.product.integral(x[i], se[i], x[j], se[j], df, xmin, xmax)
-        } else {
-          pml[i,j] = t.product.integral(x[i], se[i], x[j], se[j], df, -Inf, xmin) +
-            t.product.integral(x[i], se[i], x[j], se[j], df, xmax, Inf)
-        }
+  # posterior marginal likelihood
+  pml = NULL
+  for(i in index) {
+
+    # add current test onto subset of points
+    points.save = points
+    if (!(i %in% points)) points = c(i, points)
+
+    area1 = NULL
+    for(j in points) {
+      if(complement == FALSE) {
+        area1 = c(area1, t.product.integral(x[i], se[i], df[i],
+                                            x[j], se[j], df[j], xmin, xmax))
+      } else {
+        area1 = c(area1, t.product.integral(x[i], se[i], df[i],
+                                            x[j], se[j], df[j], -Inf, xmin) +
+                    t.product.integral(x[i], se[i], df[i],
+                                       x[j], se[j], df[j], xmax, Inf))
+      }
+    }
 
     # normalising terms
     if (complement == FALSE)
-      area2 = mean(pt((xmax-x)/se, df) - pt((xmin-x)/se, df))
+      area2 = mean(pt((xmax-x[points])/se[points], df[points]) -
+                     pt((xmin-x[points])/se[points], df[points]))
     else
-      area2 = mean(pt((xmin-x)/se, df) + pt((xmax-x)/se, df, lower=F))
+      area2 = mean(pt((xmin-x[points])/se[points], df[points]) +
+                     pt((xmax-x[points])/se[points], df[points], lower=F))
 
     # adjust the diagonal elements for bias
-    if (df<=nrow(ebf::t.bias)) bias = ebf::t.bias$bias[df]
-    else bias = 0.5
-    for(i in 1:length(x))
-      pml[i,i] = pml[i,i] / exp(area2 * bias)
+    if (df[i] <= nrow(t.bias))
+      bias = ebf::t.bias$bias[df[i]]
+    else {
+      if (is.infinite(df[i])) bias = 0.5
+      else bias = compute.t.bias(df[i])$bias
+    }
+    area1[match(i,points)] = area1[match(i,points)] / exp(area2 * bias)
 
     # form the EBFs
-    apply(pml, 1, mean) / area2
+    pml = c(pml, mean(area1) / area2)
+
+    # restore subset of points
+    points = points.save
   }
 
-  if (TRUE) {
-    pml = rep(0, length(index))
-    for(i in 1:length(index)) {
-      points.save = points
-      if (!(index[i] %in% points)) points = c(index[i], points)
-
-      t.integral = rep(0, length(points))
-
-      for(j in 1:length(points)) {
-        if(complement == FALSE) {
-          t.integral[j] = t.product.integral(x[index[i]], se[index[i]],
-                                             x[points[j]], se[points[j]], df, xmin, xmax)
-        } else {
-          t.integral[j] = t.product.integral(x[index[i]], se[index[i]],
-                                             x[points[j]], se[points[j]], df, -Inf, xmin) +
-            t.product.integral(x[index[i]], se[index[i]],
-                               x[points[j]], se[points[j]], df, xmax, Inf)
-        }
-      }
-
-      # normalising terms
-      if (complement == FALSE)
-        area2 = mean(pt((xmax-x[points])/se[points], df) -
-                       pt((xmin-x[points])/se[points], df))
-      else
-        area2 = mean(pt((xmin-x[points])/se[points], df) +
-                       pt((xmax-x[points])/se[points], df, lower=F))
-
-      # adjust the diagonal elements for bias
-      if (df<=nrow(ebf::t.bias)) bias = ebf::t.bias$bias[df]
-      else bias = 0.5
-      t.integral[match(index[i],points)] = t.integral[match(index[i],points)] / exp(area2 * bias)
-
-      # form the EBFs
-      pml[i] = mean(t.integral) / area2
-      points = points.save
-    }
-    pml
-  }
-
+  pml
 }
