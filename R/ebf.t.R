@@ -2,6 +2,11 @@
 #'
 #' Calculates empirical Bayes factors (EBFs) for univariate t tests.
 #'
+#' The EBF includes bias adjustments to the log posterior marginal likelihoods.
+#' Pre-computed adjustments are used for \code{df} from 1 to 100.
+#' For higher values, the asymptotic adjustment of 0.5 is used.
+#'
+#'
 #' @template allParams
 #' @template normParams
 #' @template shrinkParams
@@ -36,7 +41,7 @@ ebf.t <- function(x,
   ### point hypothesis
   if (h0[1] == h0[2]) ebf.h0 = dt((x - h0[1]) /se, df) / se
 
-  ### interval hypothesis
+    ### interval hypothesis
   if (h0[1] != h0[2]) ebf.h0 = ebf.t.simple(x, se, min(h0), max(h0), df)
 
   # alternative hypothesis
@@ -48,24 +53,24 @@ ebf.t <- function(x,
   }
   ### complement interval
   if (is.null(h1)) ebf.h1 = ebf.t.simple(x, se, min(h0), max(h0), df, TRUE)
-
-  # EBFs
+print(c(ebf.h0, ebf.h0))
+    # EBFs
   ebf = ebf.h1 / ebf.h0
   ebf.units = log(ebf) / log((sqrt(3)+1)/(sqrt(3)-1))
 
   # P-values
-  p = NULL
-  if (h0[1]==0 & h0[2]==0) {
+  p = rep(NA, length(x))
+  if (h0[1] == h0[2]) {
     if (!is.null(h1)) {
       ### two-sided test
-      if (h1[1]==-Inf & h1[2]==Inf) p = pt(-abs(x) / se, df) *2
+      if (h1[1]==-Inf & h1[2]==Inf) p = pt(-abs(x-h0[1]) / se, df) *2
       ### one-sided positive test
-      if (h1[1]==0 & h1[2]==Inf) p = pt(x / se, df, lower=F)
+      if (h1[1]==h0[1] & h1[2]==Inf) p = pt((x-h0[1]) / se, df, lower=F)
       ### one-sided negative test
-      if (h1[1]==-Inf & h1[2]==0) p = pt(x / se, df)
+      if (h1[1]==-Inf & h1[2]==h0[2]) p = pt((x-h0[2]) / se, df)
     } else {
       ### two-sided test
-      p = pt(-abs(x) / se, df) *2
+      p = pt(-abs(x-h0[1]) / se, df) *2
     }
   }
   p.log10 = NULL

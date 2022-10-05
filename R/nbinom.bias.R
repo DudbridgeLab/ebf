@@ -1,9 +1,9 @@
-#' EBF bias for binomial tests
+#' EBF bias for negative binomial tests
 #'
-#' Bias in the log posterior marginal likelihood for binomial tests,
+#' Bias in the log posterior marginal likelihood for negative binomial tests,
 #' used for calculating empirical Bayes factors.
-#' Bias is computed by the \code{compute.binom.bias} function using enumeration.
-#' Sample sizes range from 1 to 100.
+#' Bias is computed by the \code{compute.nbinom.bias} function using Monte Carlo simulation.
+#' Minimum sample sizes (ie fixed number of events) range from 1 to 100.
 #' The uniform prior is used.
 #'
 #' The bias depends on the true success probability.
@@ -14,4 +14,4 @@
 #'
 #' @template references
 #'
-"binom.bias"
+"nbinom.bias"

@@ -40,9 +40,5 @@ ebf.chisq <- function(x,
                       p = p[index],
                       p.log10 = p.log10[index])
 
-  if (shrink == TRUE) result = data.frame(result,
-                                          ebf.shrink,
-                                          ebf.shrink.units)
-
   result
 }

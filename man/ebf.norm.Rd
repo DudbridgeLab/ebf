@@ -37,18 +37,18 @@ To test positive values against negative values, use \code{h0=c(-Inf,0)}.
 In this case \code{h1} defaults to \code{c(0,Inf)}.
 To test negative values against positive values, use \code{h0=c(0,Inf)}.}
 
-\item{shrink}{If \code{TRUE}, uses the entire distribution of \code{x}
+\item{shrink}{If \code{TRUE}, uses all the data in \code{x}
 to calculate each individual EBF.
 
-If \code{shrink==TRUE} the calculation is of order \code{length(x)^2}
+The calculation is of order \code{length(x)^2}
 and may be very time-consuming.  To reduce the computation a subset of
 \code{x} may be used to calculate the shrinkage EBFs.
 By default a maximum of 1000 points is used, taken from the quantiles of the
-simple EBFs.  This number can be varied with the \code{npoints} option.
+simple EBFs.  This number can be varied with the \code{npoints} parameter.
 
 Further reduction can be achieved by calculating EBFs only for the elements
-of \code{x} given by \code{index}.  The full distribution of \code{x} is used
-in calculating those EBFs.}
+of \code{x} given by \code{index}.  All the points in \code{x} are used
+in calculating those EBFs, unless varied by \code{npoints}.}
 
 \item{npoints}{Number of points to use in calculate shrinkage EBFs.
 Default is \code{min(length(x), 1000)}.}

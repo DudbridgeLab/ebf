@@ -12,12 +12,11 @@ ebf.t.simple <- function(x, se, xmin, xmax, df, complement=FALSE) {
         t.product.integral(x[i], se[i], df[i], x[i], se[i], df[i], xmax, Inf)
     }
     # bias
-    if (df[i] <= nrow(t.bias))
-      bias[i] = ebf::t.bias$bias[df[i]]
-    else {
-      if (is.infinite(df[i])) bias[i] = 0.5
-      else bias[i] = compute.t.bias(df[i])$bias
-    }
+    if (df[i] <= length(t.bias))
+      bias[i] = ebf::t.bias[df[i]]
+    else
+      bias[i] = 0.5
+
   }
 
   # normalising term
@@ -27,7 +26,7 @@ ebf.t.simple <- function(x, se, xmin, xmax, df, complement=FALSE) {
     area2 = pt((xmin-x)/se, df) + pt((xmax-x)/se, df, lower=F)
   }
 
-  # EBF
+    # EBF
   area1 / area2 / exp(bias * area2)
 }
 

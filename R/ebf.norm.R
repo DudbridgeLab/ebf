@@ -48,24 +48,24 @@ ebf.norm <- function(x,
   ebf.units = log(ebf) / log((sqrt(3)+1)/(sqrt(3)-1))
 
   # P-values
-  p = NULL
-  if (h0[1]==0 & h0[2]==0) {
+  p = rep(NA, length(x))
+  if (h0[1]==h0[2]) {
     if (!is.null(h1)) {
       ### two-sided test
-      if (h1[1]==-Inf & h1[2]==Inf) p = pnorm(-abs(x), 0, se) *2
+      if (h1[1]==-Inf & h1[2]==Inf) p = pnorm(-abs(x-h0[1]), 0, se) *2
       ### one-sided positive test
-      if (h1[1]==0 & h1[2]==Inf) p = pnorm(x, 0, se, lower=F)
+      if (h1[1]==h0[1] & h1[2]==Inf) p = pnorm(x-h0[1], 0, se, lower=F)
       ### one-sided negative test
-      if (h1[1]==-Inf & h1[2]==0) p = pnorm(x, 0, se)
+      if (h1[1]==-Inf & h1[2]==h0[2]) p = pnorm(x-h0[1], 0, se)
     } else {
       ### two-sided test
-      p = pnorm(-abs(x), 0, se) *2
+      p = pnorm(-abs(x-h0[1]), 0 , se) *2
     }
   }
   p.log10 = NULL
   if (!is.null(p)) p.log10 = -log(p)/log(10)
 
-  # shrinkage
+    # shrinkage
   ebf.shrink = NULL
   ebf.shrink.units = NULL
   if (shrink == TRUE) {

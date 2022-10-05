@@ -1,33 +1,31 @@
-#' Empirical Bayes factors for binomial tests
+#' Empirical Bayes factors for Poisson tests
 #'
-#' Calculates empirical Bayes factors (EBFs) for binomial tests of proportions.
+#' Calculates empirical Bayes factors (EBFs) for Poisson tests of rates.
 #'
 #' The EBF includes bias adjustments to the log posterior marginal likelihoods.
-#' Pre-computed adjustments are used for \code{size} from 1 to 100.
-#' As the adjustment depends on the unknown success probability, it is
-#' maximised over the probability at each value of \code{size}, giving a conservative EBF.
-#' For higher values of \code{size}, the asymptotic adjustment of 0.5 is used.
+#' The adjustment depends on the unknown rate parameter.
+#' The maximum value is 0.5346, corresponding to a rate of 7.301.
+#' This is used to give a conservative EBF.
 #'
 #' If a normal approximation is acceptable, use \code{\link{ebf.norm}}.
 #'
 #' @template allParams
 #' @template shrinkParams
 #'
-#' @param size Vector containing the numbers of trials in each test.
-#' The numbers of successes are contained in \code{x}.
+#' @param interval Vector containing the interval lengths in each test.
+#' The numbers of events are contained in \code{x}.
 #'
 #' @param h1 If a scalar, the value of a point alternative hypothesis.
 #' If a vector with two elements, the lower and upper bounds of
 #' the alternative hypothesis.  If \code{NULL} (default), the alternative
 #' hypothesis is the complement of \code{h0}.
 #'
-#' The default test has \code{h0=0.5}, with two-sided alternative.
-#' For one-sided alternatives, use \code{h1=c(0.5,1)} or \code{h1=c(0,0.5)}.
-#' To test higher values against lower values, use \code{h0=c(0,0.5)}.
-#' In this case \code{h1} defaults to \code{c(0.5,1)}.
-#' To test lower values against higher values, use \code{h0=c(0.5,1)}.
+#' The default test has \code{h0=1}, with two-sided alternative.
+#' For one-sided alternatives, use \code{h1=c(1,Inf)} or \code{h1=c(0,1)}.
+#' To test higher values against lower values, use \code{h0=c(0,1)}.
+#' In this case \code{h1} defaults to \code{c(1,Inf)}.
+#' To test lower values against higher values, use \code{h0=c(1,Inf)}.
 #'
-#' @param shape Parameter of the symmetric prior Beta distribution.
 #'
 #' @import stats
 #'
@@ -35,14 +33,13 @@
 #'
 #' @export
 
-ebf.binom <- function(x,
-                  size,
+ebf.poisson <- function(x,
+                  interval=1,
                   index=NULL,
-                  h0=0.5,
+                  h0=1,
                   h1=NULL,
                   shrink=FALSE,
-                  npoints=1000,
-                  shape=1
+                  npoints=1000
                   ) {
 
   if (length(h0) == 1) h0 = c(h0, h0)
@@ -50,46 +47,46 @@ ebf.binom <- function(x,
   if (is.null(index)) index=1:length(x)
 
   # expand to a vector
-  size = rep(0, length(x)) + size
+  interval = rep(0, length(x)) + interval
 
   # null hypothesis
   ### point hypothesis
-  if (h0[1] == h0[2]) ebf.h0 = dbinom(x, size, h0[1])
+  if (h0[1] == h0[2]) ebf.h0 = dpois(x, interval * h0[1])
 
   ### interval hypothesis
-  if (h0[1] != h0[2]) ebf.h0 = ebf.binom.simple(x, size, min(h0), max(h0), shape)
+  if (h0[1] != h0[2]) ebf.h0 = ebf.poisson.simple(x, interval, min(h0), max(h0))
 
   # alternative hypothesis
   if (!is.null(h1)) {
     ### point hypothesis
-    if (h1[1] == h1[2]) ebf.h1 = dbinom(x, size, h1[1])
+    if (h1[1] == h1[2]) ebf.h1 = dpois(x, interval * h1[1])
     ### interval hypothesis
-    if (h1[1] != h1[2]) ebf.h1 = ebf.binom.simple(x, size, min(h1), max(h1), shape)
+    if (h1[1] != h1[2]) ebf.h1 = ebf.poisson.simple(x, interval, min(h1), max(h1))
   }
   ### complement interval
-  if (is.null(h1)) ebf.h1 = ebf.binom.simple(x, size, min(h0), max(h0), shape, TRUE)
+  if (is.null(h1)) ebf.h1 = ebf.poisson.simple(x, interval, min(h0), max(h0), TRUE)
 
     # EBFs
   ebf = ebf.h1 / ebf.h0
   ebf.units = log(ebf) / log((sqrt(3)+1)/(sqrt(3)-1))
 
   # P-values
-  p = rep(NA, length(x))
+  p = rep(NA,length(x))
   if (h0[1]==h0[2]) {
     if (!is.null(h1)) {
       ### two-sided test
-      if (h1[1]==0 & h1[2]==1) {
+      if (h1[1]==0 & h1[2]==Inf) {
         for(i in 1:length(x))
-          p[i] = binom.test(x[i], size[i], h0[1])$p.value
+          p[i] = poisson.test(x[i], interval[i], h0[1])$p.value
       }
       ### one-sided higher test
-      if (h1[1]==h0[1] & h1[2]==1) p = pbinom(x-1, size, h0[1], lower=F)
-      ### one-sided lower test
-      if (h1[1]==0 & h1[2]==h0[2]) p = pbinom(x, size, h0[1])
+      if (h1[1]==h0[1] & h1[2]==1) p = ppois(x-1, interval * h0[1], lower=F)
+      ### one-sided negative test
+      if (h1[1]==0 & h1[2]==h0[2]) p = ppois(x, interval * h0[1])
     } else {
       ### two-sided test
       for(i in 1:length(x))
-        p[i] = binom.test(x[i], size[i], h0[1])$p.value
+        p[i] = poisson.test(x[i], interval[i], h0[1])$p.value
     }
   }
   p.log10 = NULL
@@ -109,7 +106,7 @@ ebf.binom <- function(x,
     if (h0[1] == h0[2]) ebf.h0.shrink = ebf.h0[index]
     ### interval hypothesis
     if (h0[1] != h0[2])
-      ebf.h0.shrink = ebf.binom.shrink(x, size, index, min(h0), max(h0), points, shape)
+      ebf.h0.shrink = ebf.poisson.shrink(x, interval, index, min(h0), max(h0), points)
 
     # alternative hypothesis
     if (!is.null(h1)) {
@@ -117,11 +114,11 @@ ebf.binom <- function(x,
       if (h1[1] == h1[2]) ebf.h1.shrink = ebf.h1[index]
       ### interval hypothesis
       if (h1[1] != h1[2])
-        ebf.h1.shrink = ebf.binom.shrink(x, size, index, min(h1), max(h1), points, shape)
+        ebf.h1.shrink = ebf.poisson.shrink(x, interval, index, min(h1), max(h1), points)
     }
     ### complement interval
     if (is.null(h1))
-      ebf.h1.shrink = ebf.binom.shrink(x, size, index, min(h0), max(h0), points, shape, TRUE)
+      ebf.h1.shrink = ebf.poisson.shrink(x, interval, index, min(h0), max(h0), points, TRUE)
 
     ebf.shrink = ebf.h1.shrink / ebf.h0.shrink
     ebf.shrink.units = log(ebf.shrink) / log((sqrt(3)+1)/(sqrt(3)-1))

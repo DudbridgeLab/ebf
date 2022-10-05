@@ -1,11 +1,10 @@
 Package: ebf
 Type: Package
 Title: Empirical Bayes Factors
-Version: 0.1.0
+Version: 0.1.1
 Author: Frank Dudbridge
 Maintainer: Frank Dudbridge <frank.dudbridge@leicester.ac.uk>
 Description: Calculates empirical Bayes factors from summary statistics.
-    Normal, t and chi-squared tests are supported.
 License: AGPL-3
 Encoding: UTF-8
 LazyData: true

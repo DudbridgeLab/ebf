@@ -5,55 +5,50 @@
 #' Pre-computed results are in the \code{ebf::binom.bias} object,
 #' for sample sizes 1 to 100 with uniform prior.
 #'
-#' @param n Vector of sample sizes for which to estimate bias.
+#' @param n Vector of sample sizes for which to compute bias.
 #' @param shape Parameter of symmetrical beta prior distribution.
 #'
 #' @import stats
 #'
-#' @return A data frame with the biases corresponding to the elements of
+#' @return A vector with the biases corresponding to the elements of
 #' \code{n}.
 #'
-#' @author Frank Dudbridge
-#'
-#' @references
-#' Dudbridge F (submitted) Units of evidence and expected Bayes factors for
-#' objective reporting of statistical evidence.
+#' @template references
 #'
 #' @export
 
 compute.binom.bias <- function(n=1:100, shape=1) {
 
   # bias for each sample size
-  bias = rep(0, length(n))
+  bias = NULL
 
   # loop through sample sizes
-  for(i in 1:length(n)) {
+  for(i in n) {
 
     # find the maximum bias over the success probabilities
-    bias[i] = optimise(function(p) {
+    bias = c(bias, optimise(function(p) {
       # observed data
       PML.obs = 0
-      PML.var = 0
-      for(k.obs in 0:n[i]) {
+      for(k.obs in 0:i) {
 
         # replicate data
         PML.rep = 0
-        for(k.rep in 0:n[i]) {
+        for(k.rep in 0:i) {
           # posterior marginal likelihood
-          PML.rep = PML.rep + dbinom(k.rep, n[i], p) *
-            (lchoose(n[i], k.rep) + lbeta(k.obs+k.rep+shape, 2*n[i]-k.obs-k.rep+shape))
+          PML.rep = PML.rep + dbinom(k.rep, i, p) *
+            (lchoose(i, k.rep) + lbeta(k.obs+k.rep+shape, 2*i-k.obs-k.rep+shape))
         }
 
         # the bias for this observed data
-        PML.obs = PML.obs + dbinom(k.obs, n[i], p) *
-          (lchoose(n[i], k.obs) + lbeta(2*k.obs+shape, 2*(n[i]-k.obs)+shape) -
+        PML.obs = PML.obs + dbinom(k.obs, i, p) *
+          (lchoose(i, k.obs) + lbeta(2*k.obs+shape, 2*(i-k.obs)+shape) -
              PML.rep)
       }
 
       # expectation over observed data
       PML.obs
-     }, c(0, 1), maximum=TRUE)$objective
+     }, c(0, 1), maximum=TRUE)$objective)
   }
 
-  data.frame(bias=bias, row.names=n)
+  bias
 }

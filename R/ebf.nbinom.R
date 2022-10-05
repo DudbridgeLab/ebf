@@ -1,6 +1,6 @@
-#' Empirical Bayes factors for binomial tests
+#' Empirical Bayes factors for negative binomial tests
 #'
-#' Calculates empirical Bayes factors (EBFs) for binomial tests of proportions.
+#' Calculates empirical Bayes factors (EBFs) for negative binomial tests of proportions.
 #'
 #' The EBF includes bias adjustments to the log posterior marginal likelihoods.
 #' Pre-computed adjustments are used for \code{size} from 1 to 100.
@@ -10,11 +10,12 @@
 #'
 #' If a normal approximation is acceptable, use \code{\link{ebf.norm}}.
 #'
+#'
 #' @template allParams
 #' @template shrinkParams
 #'
-#' @param size Vector containing the numbers of trials in each test.
-#' The numbers of successes are contained in \code{x}.
+#' @param size Vector containing the target number of successes in each test.
+#' The numbers of failures are contained in \code{x}.
 #'
 #' @param h1 If a scalar, the value of a point alternative hypothesis.
 #' If a vector with two elements, the lower and upper bounds of
@@ -35,15 +36,14 @@
 #'
 #' @export
 
-ebf.binom <- function(x,
-                  size,
-                  index=NULL,
-                  h0=0.5,
-                  h1=NULL,
-                  shrink=FALSE,
-                  npoints=1000,
-                  shape=1
-                  ) {
+ebf.nbinom <- function(x,
+                       size,
+                       index=NULL,
+                       h0=0.5,
+                       h1=NULL,
+                       shrink=FALSE,
+                       npoints=1000,
+                       shape=1) {
 
   if (length(h0) == 1) h0 = c(h0, h0)
   if (length(h1) == 1) h1 = c(h1, h1)
@@ -54,22 +54,22 @@ ebf.binom <- function(x,
 
   # null hypothesis
   ### point hypothesis
-  if (h0[1] == h0[2]) ebf.h0 = dbinom(x, size, h0[1])
+  if (h0[1] == h0[2]) ebf.h0 = dnbinom(x, size, h0[1])
 
   ### interval hypothesis
-  if (h0[1] != h0[2]) ebf.h0 = ebf.binom.simple(x, size, min(h0), max(h0), shape)
+  if (h0[1] != h0[2]) ebf.h0 = ebf.nbinom.simple(x, size, min(h0), max(h0), shape)
 
   # alternative hypothesis
   if (!is.null(h1)) {
     ### point hypothesis
-    if (h1[1] == h1[2]) ebf.h1 = dbinom(x, size, h1[1])
+    if (h1[1] == h1[2]) ebf.h1 = dnbinom(x, size, h1[1])
     ### interval hypothesis
-    if (h1[1] != h1[2]) ebf.h1 = ebf.binom.simple(x, size, min(h1), max(h1), shape)
+    if (h1[1] != h1[2]) ebf.h1 = ebf.nbinom.simple(x, size, min(h1), max(h1), shape)
   }
   ### complement interval
-  if (is.null(h1)) ebf.h1 = ebf.binom.simple(x, size, min(h0), max(h0), shape, TRUE)
+  if (is.null(h1)) ebf.h1 = ebf.nbinom.simple(x, size, min(h0), max(h0), shape, TRUE)
 
-    # EBFs
+  # EBFs
   ebf = ebf.h1 / ebf.h0
   ebf.units = log(ebf) / log((sqrt(3)+1)/(sqrt(3)-1))
 
@@ -79,17 +79,19 @@ ebf.binom <- function(x,
     if (!is.null(h1)) {
       ### two-sided test
       if (h1[1]==0 & h1[2]==1) {
-        for(i in 1:length(x))
-          p[i] = binom.test(x[i], size[i], h0[1])$p.value
-      }
+        p = apply(cbind(pnbinom(x, size, h0[1]),
+                        pnbinom(x-1, size, h0[1], lower=F)),
+                  1,min)*2
+     }
       ### one-sided higher test
-      if (h1[1]==h0[1] & h1[2]==1) p = pbinom(x-1, size, h0[1], lower=F)
+      if (h1[1]==h0[1] & h1[2]==1) p = pnbinom(x, size, h0[1])
       ### one-sided lower test
-      if (h1[1]==0 & h1[2]==h0[2]) p = pbinom(x, size, h0[1])
+      if (h1[1]==0 & h1[2]==h0[2]) p = pnbinom(x-1, size, h0[1], lower=F)
     } else {
       ### two-sided test
-      for(i in 1:length(x))
-        p[i] = binom.test(x[i], size[i], h0[1])$p.value
+      p = apply(cbind(pnbinom(x, size, h0[1]),
+                      pnbinom(x-1, size, h0[1], lower=F)),
+                1,min)*2
     }
   }
   p.log10 = NULL
@@ -109,7 +111,7 @@ ebf.binom <- function(x,
     if (h0[1] == h0[2]) ebf.h0.shrink = ebf.h0[index]
     ### interval hypothesis
     if (h0[1] != h0[2])
-      ebf.h0.shrink = ebf.binom.shrink(x, size, index, min(h0), max(h0), points, shape)
+      ebf.h0.shrink = ebf.nbinom.shrink(x, size, index, min(h0), max(h0), points, shape)
 
     # alternative hypothesis
     if (!is.null(h1)) {
@@ -117,11 +119,11 @@ ebf.binom <- function(x,
       if (h1[1] == h1[2]) ebf.h1.shrink = ebf.h1[index]
       ### interval hypothesis
       if (h1[1] != h1[2])
-        ebf.h1.shrink = ebf.binom.shrink(x, size, index, min(h1), max(h1), points, shape)
+        ebf.h1.shrink = ebf.nbinom.shrink(x, size, index, min(h1), max(h1), points, shape)
     }
     ### complement interval
     if (is.null(h1))
-      ebf.h1.shrink = ebf.binom.shrink(x, size, index, min(h0), max(h0), points, shape, TRUE)
+      ebf.h1.shrink = ebf.nbinom.shrink(x, size, index, min(h0), max(h0), points, shape, TRUE)
 
     ebf.shrink = ebf.h1.shrink / ebf.h0.shrink
     ebf.shrink.units = log(ebf.shrink) / log((sqrt(3)+1)/(sqrt(3)-1))

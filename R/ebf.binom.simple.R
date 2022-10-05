@@ -17,10 +17,10 @@ ebf.binom.simple <- function(x, size, xmin, xmax, shape, complement=FALSE) {
                      lbeta(2*x[i]+shape, 2*(size[i]-x[i])+shape) -
                      lbeta(x[i]+shape, size[i]-x[i]+shape))
     # bias
-    if (size[i] <= nrow(binom.bias) | shape != 1)
-      bias[i] = ebf::binom.bias$bias[size[i]]
+    if (size[i] <= length(binom.bias) & shape == 1)
+      bias[i] = ebf::binom.bias[size[i]]
     else
-      bias[i] = compute.binom.bias(size[i])$bias
+      bias[i] = 0.5
   }
 
   # normalising term

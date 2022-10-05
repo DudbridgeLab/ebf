@@ -32,12 +32,11 @@ ebf.t.shrink <- function(x, se, df, index, xmin, xmax, points, complement=FALSE)
                      pt((xmax-x[points])/se[points], df[points], lower=F))
 
     # adjust the diagonal elements for bias
-    if (df[i] <= nrow(t.bias))
-      bias = ebf::t.bias$bias[df[i]]
-    else {
-      if (is.infinite(df[i])) bias = 0.5
-      else bias = compute.t.bias(df[i])$bias
-    }
+    if (df[i] <= length(t.bias))
+      bias = ebf::t.bias[df[i]]
+    else
+      bias = 0.5
+
     area1[match(i,points)] = area1[match(i,points)] / exp(area2 * bias)
 
     # form the EBFs

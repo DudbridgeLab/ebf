@@ -33,10 +33,10 @@ ebf.binom.shrink <- function(x, size, index, xmin, xmax, points, shape, compleme
                      pbeta(xmax, x[points]+shape, size[points]-x[points]+shape, lower=F))
 
     # adjust the diagonal elements for bias
-    if (size[i] <= nrow(binom.bias) | shape !=1)
-      bias = ebf::binom.bias$bias[size[i]]
+    if (size[i] <= length(binom.bias) & shape == 1)
+      bias = ebf::binom.bias[size[i]]
     else
-      bias = compute.binom.bias(size[i])$bias
+      bias = 0.5
 
     area1[match(i,points)] = area1[match(i,points)] /
       exp(area2 * bias)

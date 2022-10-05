@@ -7,13 +7,13 @@
 compute.t.bias(df = 1:100)
 }
 \arguments{
-\item{df}{Vector of degrees of freedom for which to estimate bias.}
+\item{df}{Vector of degrees of freedom for which to compute bias.}
 }
 \value{
-A data frame with \code{df} in the first column and bias in the second.
+A vector with the biases corresponding to \code{df}.
 }
 \description{
-Computes the bias in the log posterior mean likelihood for t tests.
+Computes the bias in the log posterior marginal likelihood for t tests.
 }
 \details{
 Pre-computed results for 1 to 100 degrees of freedom are in the
@@ -24,6 +24,8 @@ This requires the \code{cubature} library.
 \references{
 Dudbridge F (submitted) Units of evidence and expected Bayes factors for
 objective reporting of statistical evidence.
+
+Dudbridge F (in planning) Empirical Bayes factors.
 }
 \author{
 Frank Dudbridge
