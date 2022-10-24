@@ -9,6 +9,7 @@
 #' If \code{df1} or \code{df2} is 1, the bias from the equivalent t-test is used.
 #'
 #' @param df1 Vector of numerator degrees of freedom for which to compute bias.
+#'
 #' @param df2 Vector of denominator degrees of freedom for which to compute bias.
 #
 #' @import stats

@@ -6,7 +6,8 @@
 #' for sample sizes 1 to 100 with uniform prior.
 #'
 #' @param n Vector of sample sizes for which to compute bias.
-#' @param shape Parameter of symmetrical beta prior distribution.
+#'
+#' @param shape Parameter of symmetrical Beta prior distribution.
 #'
 #' @import stats
 #'

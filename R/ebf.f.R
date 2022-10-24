@@ -1,6 +1,6 @@
 #' Empirical Bayes factors for F tests
 #'
-#' Calculates empirical Bayes factors (EBFs) for F tests.
+#' Calculates empirical Bayes factors (EBFs) for F tests of variance ratios.
 #'
 #' The EBF includes bias adjustments to the log posterior marginal likelihoods.
 #' Pre-computed adjustments are used for \code{df1} and \code{df2} from 1 to 100.
@@ -14,7 +14,9 @@
 #' @template allParams
 #'
 #' @param df1 Vector of numerator degrees of freedom.
+#'
 #' @param df2 Vector of denominator degrees of freedom.
+#'
 #' @param bias Vector of biases for each test.
 #'
 #' @return A data frame containing the following components:
@@ -22,7 +24,7 @@
 #'   \item{\code{index} Indices of elements in \code{x} for which EBFs are calculated.}
 #'     \item{\code{ebf} Empirical Bayes factors for the elements of \code{x}.}
 #'     \item{\code{ebf.units} Expressed as units of evidence.}
-#'     \item{\code{p} P-values.  This is empty if \code{h0} is an interval.}
+#'     \item{\code{p} P-values.}
 #'     \item{\code{p.log10} Expressed in -log10 units.}
 #'   }
 #'
@@ -40,30 +42,36 @@ ebf.f <- function(x,
                   bias=NULL) {
 
   if (is.null(index)) index=1:length(x)
+  df1 = df1 * rep(1, length(x))
+  df2 = df2 * rep(1, length(x))
 
   ebf = rep(0, length(x))
+
   # posterior marginal likelihood
   for(i in 1:length(x)) {
 
     if (df1[i]>1 & df2[i]>1) {
       # F test
-      ebf[i] = df1[i]/(df1[i]-1) * beta(df1[i], df2[i]) / beta(df1[i]/2, df2[i]/2)^2 /x[i]
+      ebf[i] = exp( log(df1[i]) - log(df1[i]-1) + lbeta(df1[i], df2[i]) -
+                      lbeta(df1[i]/2, df2[i]/2)*2 - log(x[i]) )
     } else {
       # t test
       if (df1[i]==1)
-        ebf[i] = gamma((df2[i]+1)/2) * gamma(df2[i]+0.5) /
-          (gamma(df2[i]/2) * gamma(df2[i]+1) * (1+x[i]/df2[i])^((-df2[i]-1)/2))
+        ebf[i] = exp( lgamma((df2[i]+1)/2) + lgamma(df2[i]+0.5) -
+                        (lgamma(df2[i]/2) + lgamma(df2[i]+1) +
+                           log(1 + x[i]/df2[i]) * ((-df2[i]-1) / 2)) )
       else
-        ebf[i] = gamma((df1[i]+1)/2) * gamma(df1[i]+0.5) /
-          (gamma(df1[i]/2) * gamma(df1[i]+1) * (1+1/x[i]/df1[i])^((-df1[i]-1)/2))
+        ebf[i] = exp ( lgamma((df1[i]+1)/2) + lgamma(df1[i]+0.5) -
+                         (lgamma(df1[i]/2) + lgamma(df1[i]+1) +
+                            log(1 + 1/x[i]/df1[i]) * ((-df1[i]-1) / 2)))
     }
   }
 
   # bias
   if (is.null(bias))
     for(i in 1:length(x)) {
-      if (df1[i] <= nrow(ebf::f.bias) & df2[i] <= ncol(ebf::f.bias))
-        bias[i] = ebf::f.bias[df1[i], df2[i]]
+      if (df1[i] <= nrow(f.bias) & df2[i] <= ncol(f.bias))
+        bias[i] = f.bias[df1[i], df2[i]]
       else
         bias[i] = 0.5
     }

@@ -7,12 +7,12 @@
 ebf.chisq(x, df = 1, index = NULL)
 }
 \arguments{
-\item{x}{Vector of statistics for which EBFs will be calculated.}
+\item{x}{Vector of statistics.}
 
-\item{df}{Vector of degrees of freedom. Defaults to 1.}
+\item{df}{Vector of degrees of freedom.}
 
-\item{index}{Vector of indices in \code{x}.  EBFs are calculated only for
-those elements. If \code{NULL}, EBFs are calculated for all elements.}
+\item{index}{Vector of indices in \code{x}.  EBFs are calculated for
+those elements only. If \code{NULL}, EBFs are calculated for all elements.}
 }
 \value{
 A data frame containing the following components:
@@ -20,18 +20,24 @@ A data frame containing the following components:
   \item{\code{index} Indices of elements in \code{x} for which EBFs are calculated.}
     \item{\code{ebf} Empirical Bayes factors for the elements of \code{x}.}
     \item{\code{ebf.units} Expressed as units of evidence.}
-    \item{\code{p} P-values.  This is empty if \code{h0} is an interval.}
+    \item{\code{p} P-values.}
     \item{\code{p.log10} Expressed in -log10 units.}
   }
 }
 \description{
 Calculates empirical Bayes factors (EBFs) for chi-squared tests.
 }
+\details{
+The assumption is that a likelihood can be defined such that the chi-squared
+is approximately equal to twice the difference between the maximised
+log-likelihood and the null log-likelihood.  Then it can be shown that
+\code{EBF = exp((chi2 - df)/2) / (sqrt(2)^df)}.
+}
 \references{
 Dudbridge F (submitted) Units of evidence and expected Bayes factors for
 objective reporting of statistical evidence.
 
-Dudbridge F (in planning) Empirical Bayes factors.
+Dudbridge F (in preparation) Empirical Bayes factors.
 }
 \author{
 Frank Dudbridge

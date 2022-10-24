@@ -9,7 +9,7 @@ compute.binom.bias(n = 1:100, shape = 1)
 \arguments{
 \item{n}{Vector of sample sizes for which to compute bias.}
 
-\item{shape}{Parameter of symmetrical beta prior distribution.}
+\item{shape}{Parameter of symmetrical Beta prior distribution.}
 }
 \value{
 A vector with the biases corresponding to the elements of
@@ -26,7 +26,7 @@ for sample sizes 1 to 100 with uniform prior.
 Dudbridge F (submitted) Units of evidence and expected Bayes factors for
 objective reporting of statistical evidence.
 
-Dudbridge F (in planning) Empirical Bayes factors.
+Dudbridge F (in preparation) Empirical Bayes factors.
 }
 \author{
 Frank Dudbridge

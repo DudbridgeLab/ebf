@@ -1,7 +1,7 @@
 Package: ebf
 Type: Package
 Title: Empirical Bayes Factors
-Version: 0.1.1
+Version: 0.2.0
 Author: Frank Dudbridge
 Maintainer: Frank Dudbridge <frank.dudbridge@leicester.ac.uk>
 Description: Calculates empirical Bayes factors from summary statistics.
@@ -9,4 +9,4 @@ License: AGPL-3
 Encoding: UTF-8
 LazyData: true
 RoxygenNote: 7.1.1
-Suggests: cubature, splines
+Suggests: cubature, splines, gtools

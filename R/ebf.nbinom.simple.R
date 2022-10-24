@@ -20,7 +20,7 @@ ebf.nbinom.simple <- function(x, size, xmin, xmax, shape, complement=FALSE) {
 
     # bias
     if (size[i] <= length(nbinom.bias) & shape == 1)
-      bias[i] = ebf::nbinom.bias[size[i]]
+      bias[i] = nbinom.bias[size[i]]
     else
       bias[i] = 0.5
   }

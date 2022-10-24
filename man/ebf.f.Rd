@@ -7,14 +7,14 @@
 ebf.f(x, df1, df2, index = NULL, bias = NULL)
 }
 \arguments{
-\item{x}{Vector of statistics for which EBFs will be calculated.}
+\item{x}{Vector of statistics.}
 
 \item{df1}{Vector of numerator degrees of freedom.}
 
 \item{df2}{Vector of denominator degrees of freedom.}
 
-\item{index}{Vector of indices in \code{x}.  EBFs are calculated only for
-those elements. If \code{NULL}, EBFs are calculated for all elements.}
+\item{index}{Vector of indices in \code{x}.  EBFs are calculated for
+those elements only. If \code{NULL}, EBFs are calculated for all elements.}
 
 \item{bias}{Vector of biases for each test.}
 }
@@ -24,12 +24,12 @@ A data frame containing the following components:
   \item{\code{index} Indices of elements in \code{x} for which EBFs are calculated.}
     \item{\code{ebf} Empirical Bayes factors for the elements of \code{x}.}
     \item{\code{ebf.units} Expressed as units of evidence.}
-    \item{\code{p} P-values.  This is empty if \code{h0} is an interval.}
+    \item{\code{p} P-values.}
     \item{\code{p.log10} Expressed in -log10 units.}
   }
 }
 \description{
-Calculates empirical Bayes factors (EBFs) for F tests.
+Calculates empirical Bayes factors (EBFs) for F tests of variance ratios.
 }
 \details{
 The EBF includes bias adjustments to the log posterior marginal likelihoods.
@@ -45,7 +45,7 @@ accurate adjustment.  This can then be supplied here in the \code{bias} paramete
 Dudbridge F (submitted) Units of evidence and expected Bayes factors for
 objective reporting of statistical evidence.
 
-Dudbridge F (in planning) Empirical Bayes factors.
+Dudbridge F (in preparation) Empirical Bayes factors.
 }
 \author{
 Frank Dudbridge

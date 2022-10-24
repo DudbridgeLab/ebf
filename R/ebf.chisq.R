@@ -2,16 +2,21 @@
 #'
 #' Calculates empirical Bayes factors (EBFs) for chi-squared tests.
 #'
+#' The assumption is that a likelihood can be defined such that the chi-squared
+#' is approximately equal to twice the difference between the maximised
+#' log-likelihood and the null log-likelihood.  Then it can be shown that
+#' \code{EBF = exp((chi2 - df)/2) / (sqrt(2)^df)}.
+#'
 #' @template allParams
 #'
-#' @param df Vector of degrees of freedom. Defaults to 1.
+#' @param df Vector of degrees of freedom.
 #'
 #' @return A data frame containing the following components:
 #'   \itemize{
 #'   \item{\code{index} Indices of elements in \code{x} for which EBFs are calculated.}
 #'     \item{\code{ebf} Empirical Bayes factors for the elements of \code{x}.}
 #'     \item{\code{ebf.units} Expressed as units of evidence.}
-#'     \item{\code{p} P-values.  This is empty if \code{h0} is an interval.}
+#'     \item{\code{p} P-values.}
 #'     \item{\code{p.log10} Expressed in -log10 units.}
 #'   }
 #'

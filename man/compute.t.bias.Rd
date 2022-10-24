@@ -25,7 +25,7 @@ This requires the \code{cubature} library.
 Dudbridge F (submitted) Units of evidence and expected Bayes factors for
 objective reporting of statistical evidence.
 
-Dudbridge F (in planning) Empirical Bayes factors.
+Dudbridge F (in preparation) Empirical Bayes factors.
 }
 \author{
 Frank Dudbridge

@@ -24,7 +24,6 @@ ebf.poisson.simple <- function(x, interval, xmin, xmax, complement=FALSE) {
   # maximum bias corresponds to lambda=7.301
   bias = 0.5346
 
-
   # normalising term
   if (complement == FALSE ) {
     area2 = pgamma(xmax, x[i]/interval[i], 1) -

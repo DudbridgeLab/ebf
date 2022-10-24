@@ -34,14 +34,19 @@
 #' @export
 
 ebf.poisson <- function(x,
-                  interval=1,
-                  index=NULL,
-                  h0=1,
-                  h1=NULL,
-                  shrink=FALSE,
-                  npoints=1000
-                  ) {
+                        interval=1,
+                        index=NULL,
+                        h0=1,
+                        h1=NULL,
+                        shrink=FALSE,
+                        npoints=1000,
+                        nsupport=20,
+                        tol=1e-5,
+                        nboot=0,
+                        seed=0
+                        ) {
 
+  set.seed(seed)
   if (length(h0) == 1) h0 = c(h0, h0)
   if (length(h1) == 1) h1 = c(h1, h1)
   if (is.null(index)) index=1:length(x)
@@ -66,7 +71,7 @@ ebf.poisson <- function(x,
   ### complement interval
   if (is.null(h1)) ebf.h1 = ebf.poisson.simple(x, interval, min(h0), max(h0), TRUE)
 
-    # EBFs
+  # EBFs
   ebf = ebf.h1 / ebf.h0
   ebf.units = log(ebf) / log((sqrt(3)+1)/(sqrt(3)-1))
 
@@ -99,26 +104,29 @@ ebf.poisson <- function(x,
 
     # select points to use in estimating shrinkage EBFs
     if (length(x) < npoints) points = 1:length(x)
-    else points = order(ebf)[seq(1/npoints, 1, 1/npoints)*length(x)]
+    else points = sample(1:length(x), npoints)
 
     # null hypothesis
     ### point hypothesis
-    if (h0[1] == h0[2]) ebf.h0.shrink = ebf.h0[index]
+    if (h0[1] == h0[2]) ebf.h0.shrink = ebf.h0
     ### interval hypothesis
     if (h0[1] != h0[2])
-      ebf.h0.shrink = ebf.poisson.shrink(x, interval, index, min(h0), max(h0), points)
+      ebf.h0.shrink = ebf.poisson.npml(x, interval, index, min(h0), max(h0), FALSE,
+                                       points, nsupport, tol, nboot)
 
     # alternative hypothesis
     if (!is.null(h1)) {
       ### point hypothesis
-      if (h1[1] == h1[2]) ebf.h1.shrink = ebf.h1[index]
+      if (h1[1] == h1[2]) ebf.h1.shrink = ebf.h1
       ### interval hypothesis
       if (h1[1] != h1[2])
-        ebf.h1.shrink = ebf.poisson.shrink(x, interval, index, min(h1), max(h1), points)
+        ebf.h1.shrink = ebf.poisson.npml(x, interval, index, min(h1), max(h1), FALSE,
+                                         points, nsupport, tol, nboot)
     }
     ### complement interval
     if (is.null(h1))
-      ebf.h1.shrink = ebf.poisson.shrink(x, interval, index, min(h0), max(h0), points, TRUE)
+      ebf.h1.shrink = ebf.poisson.npml(x, interval, index, min(h0), max(h0), TRUE,
+                                       points, nsupport, tol, nboot)
 
     ebf.shrink = ebf.h1.shrink / ebf.h0.shrink
     ebf.shrink.units = log(ebf.shrink) / log((sqrt(3)+1)/(sqrt(3)-1))
@@ -126,13 +134,15 @@ ebf.poisson <- function(x,
 
   result = data.frame(index =  index,
                       ebf = ebf[index],
-                      ebf.units = ebf.units[index],
-                      p = p[index],
-                      p.log10 = p.log10[index])
+                      ebf.units = ebf.units[index])
+
+  if (sum(!is.na(p[index])) > 0) result = data.frame(result,
+                                          p = p[index],
+                                          p.log10 = p.log10[index])
 
   if (shrink == TRUE) result = data.frame(result,
-                                          ebf.shrink,
-                                          ebf.shrink.units)
+                                          ebf.shrink = ebf.shrink[index],
+                                          ebf.shrink.units = ebf.shrink.units[index])
 
   result
 }

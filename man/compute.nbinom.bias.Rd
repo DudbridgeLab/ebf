@@ -9,7 +9,7 @@ compute.nbinom.bias(size = 1:100, shape = 1, nsample = 1e+06, seed = 0)
 \arguments{
 \item{size}{Vector of sample sizes for which to estimate bias.}
 
-\item{shape}{Parameter of symmetrical beta prior distribution.}
+\item{shape}{Parameter of symmetrical Beta prior distribution.}
 
 \item{nsample}{Number of random samples taken to estimate bias.}
 
@@ -34,7 +34,7 @@ simulations of observed and replicate data from the negative binomial distributi
 Dudbridge F (submitted) Units of evidence and expected Bayes factors for
 objective reporting of statistical evidence.
 
-Dudbridge F (in planning) Empirical Bayes factors.
+Dudbridge F (in preparation) Empirical Bayes factors.
 }
 \author{
 Frank Dudbridge

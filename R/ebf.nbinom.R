@@ -42,9 +42,15 @@ ebf.nbinom <- function(x,
                        h0=0.5,
                        h1=NULL,
                        shrink=FALSE,
+                       shape=1,
                        npoints=1000,
-                       shape=1) {
+                       nsupport=20,
+                       tol=1e-5,
+                       nboot=0,
+                       seed=0
+                       ) {
 
+  set.seed(seed)
   if (length(h0) == 1) h0 = c(h0, h0)
   if (length(h1) == 1) h1 = c(h1, h1)
   if (is.null(index)) index=1:length(x)
@@ -82,7 +88,7 @@ ebf.nbinom <- function(x,
         p = apply(cbind(pnbinom(x, size, h0[1]),
                         pnbinom(x-1, size, h0[1], lower=F)),
                   1,min)*2
-     }
+      }
       ### one-sided higher test
       if (h1[1]==h0[1] & h1[2]==1) p = pnbinom(x, size, h0[1])
       ### one-sided lower test
@@ -104,26 +110,29 @@ ebf.nbinom <- function(x,
 
     # select points to use in estimating shrinkage EBFs
     if (length(x) < npoints) points = 1:length(x)
-    else points = order(ebf)[seq(1/npoints, 1, 1/npoints)*length(x)]
+    else points = sample(1:length(x), npoints)
 
     # null hypothesis
     ### point hypothesis
-    if (h0[1] == h0[2]) ebf.h0.shrink = ebf.h0[index]
+    if (h0[1] == h0[2]) ebf.h0.shrink = ebf.h0
     ### interval hypothesis
     if (h0[1] != h0[2])
-      ebf.h0.shrink = ebf.nbinom.shrink(x, size, index, min(h0), max(h0), points, shape)
+      ebf.h0.shrink = ebf.nbinom.npml(x, size, index, min(h0), max(h0), shape, FALSE,
+                                      points, nsupport, tol, nboot)
 
     # alternative hypothesis
     if (!is.null(h1)) {
       ### point hypothesis
-      if (h1[1] == h1[2]) ebf.h1.shrink = ebf.h1[index]
+      if (h1[1] == h1[2]) ebf.h1.shrink = ebf.h1
       ### interval hypothesis
       if (h1[1] != h1[2])
-        ebf.h1.shrink = ebf.nbinom.shrink(x, size, index, min(h1), max(h1), points, shape)
+        ebf.h1.shrink = ebf.nbinom.npml(x, size, index, min(h1), max(h1), shape, FALSE,
+                                        points, nsupport, tol, nboot)
     }
     ### complement interval
     if (is.null(h1))
-      ebf.h1.shrink = ebf.nbinom.shrink(x, size, index, min(h0), max(h0), points, shape, TRUE)
+      ebf.h1.shrink = ebf.nbinom.npml(x, size, index, min(h0), max(h0), shape, TRUE,
+                                      points, nsupport, tol, nboot)
 
     ebf.shrink = ebf.h1.shrink / ebf.h0.shrink
     ebf.shrink.units = log(ebf.shrink) / log((sqrt(3)+1)/(sqrt(3)-1))
@@ -131,13 +140,15 @@ ebf.nbinom <- function(x,
 
   result = data.frame(index =  index,
                       ebf = ebf[index],
-                      ebf.units = ebf.units[index],
-                      p = p[index],
-                      p.log10 = p.log10[index])
+                      ebf.units = ebf.units[index])
+
+  if (sum(!is.na(p[index])) > 0) result = data.frame(result,
+                                          p = p[index],
+                                          p.log10 = p.log10[index])
 
   if (shrink == TRUE) result = data.frame(result,
-                                          ebf.shrink,
-                                          ebf.shrink.units)
+                                          ebf.shrink = ebf.shrink[index],
+                                          ebf.shrink.units = ebf.shrink.units[index])
 
   result
 }

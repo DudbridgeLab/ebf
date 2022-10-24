@@ -14,14 +14,14 @@ f.bias
 \description{
 Bias in the log posterior marginal likelihood for F tests,
 used for calculating empirical Bayes factors.
-Bias is computed by the \code{compute.f.bias} function using numerical integration.
+Bias is computed by the \code{\link{compute.f.bias}} function using numerical integration.
 Degrees of freedom range from 1 to 100.
 }
 \references{
 Dudbridge F (submitted) Units of evidence and expected Bayes factors for
 objective reporting of statistical evidence.
 
-Dudbridge F (in planning) Empirical Bayes factors.
+Dudbridge F (in preparation) Empirical Bayes factors.
 }
 \author{
 Frank Dudbridge

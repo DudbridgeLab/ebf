@@ -18,7 +18,7 @@ ebf.binom.simple <- function(x, size, xmin, xmax, shape, complement=FALSE) {
                      lbeta(x[i]+shape, size[i]-x[i]+shape))
     # bias
     if (size[i] <= length(binom.bias) & shape == 1)
-      bias[i] = ebf::binom.bias[size[i]]
+      bias[i] = binom.bias[size[i]]
     else
       bias[i] = 0.5
   }

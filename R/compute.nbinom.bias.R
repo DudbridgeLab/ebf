@@ -10,8 +10,11 @@
 #' simulations of observed and replicate data from the negative binomial distribution.
 #'
 #' @param size Vector of sample sizes for which to estimate bias.
-#' @param shape Parameter of symmetrical beta prior distribution.
+#'
+#' @param shape Parameter of symmetrical Beta prior distribution.
+#'
 #' @param nsample Number of random samples taken to estimate bias.
+#'
 #' @param seed Random number seed
 #'
 #' @import stats
