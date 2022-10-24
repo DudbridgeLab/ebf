@@ -22,7 +22,7 @@ for multiple testing.  This is now similar to the familiar empirical Bayes metho
 
 The EBF is a promising framework for the objective measurement and interpretation of statistical evidence.
 This package implements EBF calculations where the "data" are statistics from classical hypothesis tests.
-At the point at which we would calculate a p-value from a test statistic, this package provides an EBF instead.
+At the point at which we would calculate a p-value from a test statistic, this package provides a corresponding EBF.
 
 To install within R, `devtools::install_github("DudbridgeLab/ebf").`
 
