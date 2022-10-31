@@ -8,13 +8,13 @@ ebf.t.simple <- function(x, se, xmin, xmax, df, complement=FALSE) {
   if (complement == FALSE) {
     area1 = exp(lgamma((df+1)/2)*2 + lgamma(df+0.5) -
                   lgamma(df/2)*2 - lgamma(df+1) - (log(df) + log(pi))/2) *
-      (pt((xmax-x) * sqrt(1/df + 2), 2*df+1) -
-         pt((xmin-x) * sqrt(1/df + 2), 2*df+1))
+      (pt((xmax-x)/se * sqrt(1/df + 2), 2*df+1) -
+         pt((xmin-x)/se * sqrt(1/df + 2), 2*df+1)) /se
   } else {
     area1 = exp(lgamma((df+1)/2)*2 + lgamma(df+0.5) -
                   lgamma(df/2)*2 - lgamma(df+1) - (log(df) + log(pi))/2) *
-      (pt((xmin-x) * sqrt(1/df + 2), 2*df+1) +
-         pt((xmax-x) * sqrt(1/df + 2), 2*df+1, lower=F))
+      (pt((xmin-x)/se * sqrt(1/df + 2), 2*df+1) +
+         pt((xmax-x)/se * sqrt(1/df + 2), 2*df+1, lower=F)) / se
   }
 
 
