@@ -85,9 +85,14 @@ ebf.nbinom <- function(x,
     if (!is.null(h1)) {
       ### two-sided test
       if (h1[1]==0 & h1[2]==1) {
-        p = apply(cbind(pnbinom(x, size, h0[1]),
-                        pnbinom(x-1, size, h0[1], lower=F)),
-                  1,min)*2
+        limit1 = qnbinom(pnbinom(x, size, h0[1]), size, h0[1])
+        limit2 = qnbinom(pnbinom(x, size, h0[1]), size, h0[1], lower=F)
+        for(i in 1:length(x)) {
+          p[i] = 1-
+            sum(dnbinom(limit1[i]:limit2[i], size[i], h0[1])) +
+            dnbinom(limit1[i], size[i], h0[1]) +
+            dnbinom(limit2[i], size[i], h0[1])
+        }
       }
       ### one-sided higher test
       if (h1[1]==h0[1] & h1[2]==1) p = pnbinom(x, size, h0[1])
