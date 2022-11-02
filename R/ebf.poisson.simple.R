@@ -3,35 +3,18 @@
 ebf.poisson.simple <- function(x, interval, xmin, xmax, complement=FALSE) {
 
   # posterior mean likelihood
-  area1 = rep(0, length(x))
-  bias = rep(0, length(x))
-  for(i in 1:length(x)) {
-    if (complement == FALSE) {
-      area1[i] = integrate(function(lambda) {
-        dpois(x[i], lambda*interval[i]) * dgamma(lambda, x[i]/interval[i], 1)
-      }, xmin, xmax)$value
-    } else {
-      area1[i] = integrate(function(lambda) {
-        dpois(x[i], lambda*interval[i]) * dgamma(lambda, x[i]/interval[i], 1)
-      }, 0,  xmin)$value +
-        integrate(function(lambda) {
-          dpois(x[i], lambda*interval[i]) * dgamma(lambda, x[i]/interval[i], 1)
-        }, xmax, Inf)$value
-    }
-
-  }
-
-  # maximum bias corresponds to lambda=7.301
-  bias = 0.5346
-
-  # normalising term
-  if (complement == FALSE ) {
-    area2 = pgamma(xmax, x[i]/interval[i], 1) -
-      pgamma(xmin, x[i]/interval[i], 1)
+  if (complement == FALSE) {
+    area1 = (pgamma(xmax, 2*x, 2*interval) - pgamma(xmin, 2*x, 2*interval)) *
+      gamma(2*x) / 4^x / gamma(x+1) / gamma(x)
+    area2 = pgamma(xmax, x, interval) - pgamma(xmin, x, interval)
   } else {
-    area2 = pgamma(xmin, x[i]/interval[i], 1) +
-      pgamma(xmax, x[i]/interval[i], 1, lower=F)
+    area1 = (pgamma(xmin, 2*x, 2*interval) + pgamma(xmax, 2*x, 2*interval, lower=F)) *
+      gamma(2*x) / 4^x / gamma(x+1) / gamma(x)
+    area2 = pgamma(xmin, x, interval) + pgamma(xmax, x, interval, lower=F)
   }
+
+  # maximum bias corresponds to lambda=6.177394
+  bias = 0.5406853
 
   # EBF
   area1 / area2 / exp(bias * area2)
