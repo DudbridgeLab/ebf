@@ -11,13 +11,13 @@
 #' @export
 
 compute.poisson.bias <- function() {
-  optimise(function(l, t) {
+  optimise(function(l) {
     bias=0
     for(i in 1:100)
       for(j in 0:100) {
-        bias = bias + dpois(i, l*t)/(1-dpois(0,l*t)) * dpois(j, l*t) *
+        bias = bias + dpois(i, l)/(1-dpois(0, l)) * dpois(j, l) *
           ((j-i)*log(2) + lgamma(2*i) + lgamma(j+1) - lgamma(i+j) - lgamma(i+1))
       }
     bias
-  }, c(0,20), 1, maximum=T)$objective
+  }, c(0,20), maximum=T)$objective
 }
