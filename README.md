@@ -7,7 +7,8 @@ first to estimate the posterior and then again to calculate the Bayes factor.  T
 widely applicable information criterion (WAIC), and in some cases the EBF and WAIC are identical.
 
 Informally an EBF is the Bayes factor we would expect in an independent replication of the experiment, using the posterior
-from the present data as the new prior.  But in classical testing scenarios the EBF can also have a fixed sampling distribution under
+from the present data as the new prior.  Inferences from EBFs are therefore expected to replicate.
+But in classical testing scenarios the EBF can also have a fixed sampling distribution under
 the null hypothesis.  It is therefore interpretable under frequentist, Bayesian and information perspectives,
 while standing itself as a measure of evidence.
 
