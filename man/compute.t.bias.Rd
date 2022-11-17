@@ -22,8 +22,7 @@ The bias is computed by numerically integrating over a bivariate t distriubtion.
 This requires the \code{cubature} library.
 }
 \references{
-Dudbridge F (submitted) Units of evidence and expected Bayes factors for
-objective reporting of statistical evidence.
+Dudbridge F (submitted) A scale of evidence for likelihood ratios.
 
 Dudbridge F (in preparation) Empirical Bayes factors.
 }

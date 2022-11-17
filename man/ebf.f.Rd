@@ -29,7 +29,7 @@ A data frame containing the following components:
   }
 }
 \description{
-Calculates empirical Bayes factors (EBFs) for F tests of variance ratios.
+Calculates empirical Bayes factors (EBFs) for F tests.
 }
 \details{
 The EBF includes bias adjustments to the log posterior marginal likelihoods.
@@ -42,8 +42,7 @@ In that case, \code{\link{compute.f.bias}} can be used to calculate an
 accurate adjustment.  This can then be supplied here in the \code{bias} parameter.
 }
 \references{
-Dudbridge F (submitted) Units of evidence and expected Bayes factors for
-objective reporting of statistical evidence.
+Dudbridge F (submitted) A scale of evidence for likelihood ratios.
 
 Dudbridge F (in preparation) Empirical Bayes factors.
 }

@@ -34,8 +34,7 @@ log-likelihood and the null log-likelihood.  Then it can be shown that
 \code{EBF = exp((chi2 - df)/2) / (sqrt(2)^df)}.
 }
 \references{
-Dudbridge F (submitted) Units of evidence and expected Bayes factors for
-objective reporting of statistical evidence.
+Dudbridge F (submitted) A scale of evidence for likelihood ratios.
 
 Dudbridge F (in preparation) Empirical Bayes factors.
 }

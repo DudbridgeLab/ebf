@@ -23,8 +23,7 @@ Pre-computed results are in the \code{ebf::binom.bias} object,
 for sample sizes 1 to 100 with uniform prior.
 }
 \references{
-Dudbridge F (submitted) Units of evidence and expected Bayes factors for
-objective reporting of statistical evidence.
+Dudbridge F (submitted) A scale of evidence for likelihood ratios.
 
 Dudbridge F (in preparation) Empirical Bayes factors.
 }

@@ -24,11 +24,9 @@ Pre-computed results are in the \code{ebf::f.bias} object,
 for degrees of freedom from 1 to 100 in either numerator or denominator.
 The bias is computed by numerically integrating over a bivariate F distriubtion.
 This requires the \code{cubature} library.
-If \code{df1} or \code{df2} is 1, the bias from the equivalent t-test is used.
 }
 \references{
-Dudbridge F (submitted) Units of evidence and expected Bayes factors for
-objective reporting of statistical evidence.
+Dudbridge F (submitted) A scale of evidence for likelihood ratios.
 
 Dudbridge F (in preparation) Empirical Bayes factors.
 }

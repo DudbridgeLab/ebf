@@ -112,8 +112,7 @@ of \code{x} given by \code{index}.  Those EBFs are calculated using all
 the points in \code{x}, unless varied by \code{npoints}.
 }
 \references{
-Dudbridge F (submitted) Units of evidence and expected Bayes factors for
-objective reporting of statistical evidence.
+Dudbridge F (submitted) A scale of evidence for likelihood ratios.
 
 Dudbridge F (in preparation) Empirical Bayes factors.
 }
