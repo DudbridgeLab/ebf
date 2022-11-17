@@ -85,7 +85,7 @@ ebf.binom <- function(x,
       ### two-sided test
       if (h1[1]==0 & h1[2]==1) {
         for(i in 1:length(x))
-          p[i] = binom.test(x[i], size[i], h0[1])$p.value
+          p[i] = as.numeric(binom.test(x[i], size[i], h0[1])$p.value)
       }
       ### one-sided higher test
       if (h1[1]==h0[1] & h1[2]==1) p = pbinom(x-1, size, h0[1], lower=F)

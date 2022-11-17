@@ -25,27 +25,28 @@
 compute.f.bias <- function(df1=1:100, df2=1:100) {
 
   # bias for each df
-  bias = NULL
+  bias = matrix(nrow=length(df1), ncol=length(df2))
 
   # loop through sample sizes
-  for(i in df1) {
-    bias.tmp = NULL
-    if (i>1)
-      for(j in df2) {
-        if (j>1)
-          bias.tmp = c(bias.tmp, cubature::adaptIntegrate(function(x)
-            df(x[1], i, j)* df(x[2], i, j) *
-              (log(i/(i-1) * beta(i, j) / beta(i/2, j/2)^2 / x[1]) -
-                 log(integrate(function(y)
-                   df(x[1]*y, i, j) * df(x[2]*y, i, j),
-                   0, Inf, stop.on.error=F)$value))
-            , c(0,0), c(Inf, Inf))$integral)
-
-        else bias.tmp = c(bias.tmp, compute.t.bias(i))
-      }
-    else bias.tmp = compute.t.bias(df2)
-    bias = rbind(bias, bias.tmp)
+  for(i in 1:length(df1)) {
+    for(j in 1:length(df2)) {
+      k1 = df1[i]
+      k2 = df2[j]
+      #if (k1+k2>2)
+        bias[i,j] = lbeta(k1, k2) - 2*lbeta(k1/2, k2/2) +
+        cubature::cubintegrate(function(x)
+          -log(x) * df(x, k1, k2), 0, Inf)$integral -
+        cubature::cubintegrate(function(x)
+          df(x[1], k1, k2) * df(x[2], k1, k2) *
+            log(
+              cubature::hcubature(function(y)
+              #integrate(function(y)
+                x[1] * df(x[1]*y, k1, k2) * y * df(x[2]*y, k1, k2),
+                0, Inf)$integral),
+                #0, Inf, stop.on.error=TRUE)$value),
+          c(0,0), c(Inf, Inf), absTol =1e-4)$integral
+    }
   }
-  rownames(bias) = NULL
+
   bias
 }

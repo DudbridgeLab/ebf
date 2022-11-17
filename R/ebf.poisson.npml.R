@@ -5,8 +5,8 @@ ebf.poisson.npml <- function(x, interval, index, xmin, xmax, complement=FALSE,
   npoints = length(points)
 
   # total intervals for mixture component distributions
-  if (nboot == 0) np.interval = npoints
-  else np.interval = 1
+  if (nboot == 0) np.interval = sum(interval[points])
+  else np.interval = interval[points]
 
   # posterior marginal likelihood
   pml = rep(0, length(x))
@@ -17,10 +17,12 @@ ebf.poisson.npml <- function(x, interval, index, xmin, xmax, complement=FALSE,
   for(boot in 0:nboot) {
     if (boot == 0) x.boot = x[points]
     else x.boot = rpois(npoints,
-                        sample(np.support.mle, npoints, replace=T, prob=np.weights.mle))
+                        sample(np.support.mle, npoints, replace=T, prob=np.weights.mle) *
+                          interval[points])
 
     # initialise
-    np.support = seq(min(x.boot, na.rm=T), max(x.boot, na.rm=T),
+    np.support = seq(min(x.boot/interval[points], na.rm=T),
+                     max(x.boot/interval[points], na.rm=T),
                      length=nsupport)
     np.weights = rep(1/nsupport, nsupport)
     llhd = 0
@@ -36,11 +38,12 @@ ebf.poisson.npml <- function(x, interval, index, xmin, xmax, complement=FALSE,
       for(j in 1:nsupport) {
         # analytic
         if (nboot == 0) {
-          density.matrix[,j] = dnbinom(x.boot, np.support[j], 1 / (1 + np.interval))
+          density.matrix[,j] = dnbinom(x.boot, np.support[j]*np.interval + 1,
+                                       np.interval/(np.interval+interval[points]))
         }
-        # bootstrapt
+        # bootstrap
         else {
-          density.matrix[,j] = dpois(x.boot, np.support[j])
+          density.matrix[,j] = dpois(x.boot, np.support[j]*interval[points])
         }
       }
       # prob of each data point marginal over support points
@@ -48,15 +51,15 @@ ebf.poisson.npml <- function(x, interval, index, xmin, xmax, complement=FALSE,
 
       # posterior supports from MLE
       np.support = (t(x.boot / likelihood) %*% density.matrix) /
-        (t(1 / likelihood) %*% density.matrix)
+        (t(interval[points] / likelihood) %*% density.matrix)
 
       # posterior weights from Bayes formula
       new.weights = (t(1/likelihood) %*% density.matrix) * np.weights
       # normalised
       np.weights = new.weights / sum(new.weights)
 
-      np.support =  as.vector(np.support)
-      np.weights =  as.vector(np.weights)
+      np.support = as.vector(np.support)
+      np.weights = as.vector(np.weights)
       newllhd = sum(log(likelihood))
     }
     if (boot == 0) {
@@ -68,34 +71,30 @@ ebf.poisson.npml <- function(x, interval, index, xmin, xmax, complement=FALSE,
     # analytic
     if (nboot == 0) {
       for(i in index) {
-        area1 = rep(0, nsupport)
-        for(j in 1:nsupport) {
-          if (complement == FALSE)
-            area = integrate(function(lambda) {
-              dpois(x[i], lambda*interval[i]) *
-                dgamma(lambda, np.support[j] * np.interval, np.interval)
-            }, xmin, xmax)$value
-          else
-            area = integrate(function(lambda) {
-              dpois(x[i], lambda*interval[i]) *
-                dgamma(lambda, np.support[j] * np.interval, np.interval)
-            }, 0, xmin)$value +
-              integrate(function(lambda) {
-                dpois(x[i], lambda*interval[i]) *
-                  dgamma(lambda, np.support[j] * np.interval, np.interval)
-              }, xmax, Inf)$value
-
-          area1[j] = area
-        }
+        if (complement == FALSE)
+          area1 = dnbinom(x[i], np.support*np.interval + 1,
+                          np.interval / (np.interval+interval[i])) *
+            (pgamma(xmax, x[i] + np.support*np.interval + 1,
+                    interval[i] + np.interval) -
+               pgamma(xmin, x[i] + np.support*np.interval + 1,
+                      interval[i]+np.interval))
+        else
+          area1 = dnbinom(x[i], np.support*np.interval + 1,
+                          np.interval / (np.interval+interval[i])) *
+            pgamma(xmin, x[i] + np.support*np.interval + 1,
+                   interval[i] + np.interval) +
+            dnbinom(x[i], np.support*np.interval + 1,
+                    np.interval / (np.interval+interval[i])) *
+            pgamma(xmax, x[i] + np.support*np.interval + 1,
+                   interval[i] + np.interval, lower=F)
 
         # normalising terms
         if (complement == FALSE)
-          area2 = pgamma(xmax, np.support[j] * np.interval, np.interval) -
-            pgamma(xmin, np.support[j] * np.interval, np.interval)
+          area2 = pgamma(xmax, np.support[j]*np.interval + 1, np.interval) -
+            pgamma(xmin, np.support[j]*np.interval + 1, np.interval)
         else
-          area2 = mean(pgamma(xmin, np.support[j] * np.interval, np.interval) +
-                         pgamma(xmax, np.support[j] * np.interval, np.interval, lower=F))
-
+          area2 = mean(pgamma(xmin, np.support[j]*np.interval + 1, np.interval) +
+                         pgamma(xmax, np.support[j]*np.interval + 1, np.interval, lower=F))
         pml.numer[i] = pml.numer[i] + sum(np.weights * area1)
         pml.denom[i] = pml.denom[i] + sum(np.weights * area2)
       }
@@ -110,7 +109,7 @@ ebf.poisson.npml <- function(x, interval, index, xmin, xmax, complement=FALSE,
       if (length(area2) > 0) {
         for(i in index) {
           pml.numer[i] = pml.numer[i] +
-            sum(np.weights[area2] * dpois(x[i], np.support[area2]))
+            sum(np.weights[area2] * dpois(x[i], np.support[area2]*interval[i]))
           pml.denom[i] = pml.denom[i] + sum(np.weights[area2])
         }
       }
@@ -121,8 +120,8 @@ ebf.poisson.npml <- function(x, interval, index, xmin, xmax, complement=FALSE,
   pml.numer = pml.numer / (nboot+1)
   pml.denom =  pml.denom / (nboot+1)
 
-  # maximum bias corresponds to lambda=7.301
-  bias = 0.5346
+  # maximum bias corresponds to lambda=6.411577
+  bias = 0.5003284
 
   for(i in index) {
     pml[i] = pml.numer[i] / pml.denom[i] /

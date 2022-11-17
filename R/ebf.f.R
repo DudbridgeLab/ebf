@@ -1,6 +1,6 @@
 #' Empirical Bayes factors for F tests
 #'
-#' Calculates empirical Bayes factors (EBFs) for F tests of variance ratios.
+#' Calculates empirical Bayes factors (EBFs) for F tests.
 #'
 #' The EBF includes bias adjustments to the log posterior marginal likelihoods.
 #' Pre-computed adjustments are used for \code{df1} and \code{df2} from 1 to 100.
@@ -50,22 +50,14 @@ ebf.f <- function(x,
   # posterior marginal likelihood
   for(i in 1:length(x)) {
 
-    if (df1[i]>1 & df2[i]>1) {
-      # F test
-      ebf[i] = exp( log(df1[i]) - log(df1[i]-1) + lbeta(df1[i], df2[i]) -
-                      lbeta(df1[i]/2, df2[i]/2)*2 - log(x[i]) )
-    } else {
-      # t test
-      if (df1[i]==1)
-        ebf[i] = exp( lgamma((df2[i]+1)/2) + lgamma(df2[i]+0.5) -
-                        (lgamma(df2[i]/2) + lgamma(df2[i]+1) +
-                           log(1 + x[i]/df2[i]) * ((-df2[i]-1) / 2)) )
-      else
-        ebf[i] = exp ( lgamma((df1[i]+1)/2) + lgamma(df1[i]+0.5) -
-                         (lgamma(df1[i]/2) + lgamma(df1[i]+1) +
-                            log(1 + 1/x[i]/df1[i]) * ((-df1[i]-1) / 2)))
+    if (df1[i]>1 | df2[i]>1) {
+      ebf[i] = exp(
+        lbeta(df1[i], df2[i]) - 2*lbeta(df1[i]/2, df2[i]/2) +
+          pf(x[i], 2*df1[i], 2*df2[i], log=T) - pf(x[i], df1[i], df2[i], log=T) -
+          log(x[i]) -
+          df(x[i], df1[i], df2[i], log=T)
+      )
     }
-  }
 
   # bias
   if (is.null(bias))
@@ -73,15 +65,17 @@ ebf.f <- function(x,
       if (df1[i] <= nrow(f.bias) & df2[i] <= ncol(f.bias))
         bias[i] = f.bias[df1[i], df2[i]]
       else
-        bias[i] = 0.5
+        bias[i] = compute.f.bias(df1[i], df2[i])
     }
+
+  }
 
   # EBF
   ebf = ebf/exp(bias)
   ebf.units = log(ebf) / log((sqrt(3)+1)/(sqrt(3)-1))
 
   # P-value
-  p = pf(x, df1, df2, lower=FALSE)
+  p = pf(x, df1, df2, lower=F)
   p.log10 = -log(p)/log(10)
 
   result = data.frame(index =  index,

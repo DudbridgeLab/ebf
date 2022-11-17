@@ -29,9 +29,11 @@ compute.t.bias <- function(df=1:100) {
     cubature::adaptIntegrate(function(x) { # integrate over obs and rep data
       a = ((1+x[1]^2 / k) * (1+x[2]^2 / k)) ^ (-k/2-0.5) # t density unnormalised
       if(a > 0)
-        b = integrate(function(z)
+        b = #integrate(function(z)
+          cubature::cubintegrate(function(z)
           ((1+(x[1]-z)^2 / k) * (1+(x[2]-z)^2 / k))^(-k/2-0.5), # marginal likelihood
-          -Inf, Inf, stop.on.error=FALSE)$value
+          #-Inf, Inf, stop.on.error=TRUE)$value
+          -Inf, Inf)$integral
       else b = 0
       if (b > 0) a*(log(b) + 2*(lgamma(k/2+0.5) - lgamma(k/2)) - log.k.pi) # normalised
       else 0
