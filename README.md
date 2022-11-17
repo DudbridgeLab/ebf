@@ -61,4 +61,5 @@ Chi-square test
 ## Citations
 
 Dudbridge F (2022) A scale of interpretation for likelihood ratios and Bayes factors.  Submitted.
+
 Dudbridge F (2022) Empirical Bayes factors.  In preparation.
