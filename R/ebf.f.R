@@ -48,7 +48,7 @@ ebf.f <- function(x,
   ebf = rep(0, length(x))
 
   # posterior marginal likelihood
-  for(i in 1:length(x)) {
+  for(i in index) {
 
     if (df1[i]>1 | df2[i]>1) {
       ebf[i] = exp(
@@ -61,11 +61,11 @@ ebf.f <- function(x,
 
   # bias
   if (is.null(bias))
-    for(i in 1:length(x)) {
+    for(i in index) {
       if (df1[i] <= nrow(f.bias) & df2[i] <= ncol(f.bias))
-        bias[i] = f.bias[df1[i], df2[i]]
+        bias[i] = f.bias[df1[i], df2[i]] * pf(x[i], df1[i], df2[i])
       else
-        bias[i] = compute.f.bias(df1[i], df2[i])
+        bias[i] = compute.f.bias(df1[i], df2[i]) * pf(x[i], df1[i], df2[i])
     }
 
   }
@@ -75,8 +75,10 @@ ebf.f <- function(x,
   ebf.units = log(ebf) / log((sqrt(3)+1)/(sqrt(3)-1))
 
   # P-value
-  p = pf(x, df1, df2, lower=F)
-  p.log10 = -log(p)/log(10)
+  p = rep(NA, length(x))
+  p.log10 = rep(NA,)
+  p[index] = pf(x[index], df1, df2, lower=F)
+  p.log10[index] = -log(p[index])/log(10)
 
   result = data.frame(index =  index,
                       ebf = ebf[index],
