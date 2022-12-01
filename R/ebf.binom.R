@@ -88,13 +88,13 @@ ebf.binom <- function(x,
           p[i] = as.numeric(binom.test(x[i], size[i], h0[1])$p.value)
       }
       ### one-sided higher test
-      if (h1[1]==h0[1] & h1[2]==1) p = pbinom(x-1, size, h0[1], lower=F)
+      if (h1[1]==h0[1] & h1[2]==1) p = as.numeric(pbinom(x-1, size, h0[1], lower=F))
       ### one-sided lower test
-      if (h1[1]==0 & h1[2]==h0[2]) p = pbinom(x, size, h0[1])
+      if (h1[1]==0 & h1[2]==h0[2]) p = as.numeric(pbinom(x, size, h0[1]))
     } else {
       ### two-sided test
       for(i in 1:length(x))
-        p[i] = binom.test(x[i], size[i], h0[1])$p.value
+        p[i] = as.numeric(binom.test(x[i], size[i], h0[1])$p.value)
     }
   }
   p.log10 = NULL

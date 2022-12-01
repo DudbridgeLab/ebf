@@ -19,10 +19,14 @@ ebf.nbinom.simple <- function(x, size, xmin, xmax, shape, complement=FALSE) {
                      lbeta(size[i]+shape, x[i]+shape))
 
     # bias
-    if (size[i] <= length(nbinom.bias) & shape == 1)
+    if (shape == 1 & size[i] <= length(nbinom.bias) &
+        (complement == FALSE & xmin == 0 & xmax == 1 |
+         complement == TRUE & xmin == xmax)) {
       bias[i] = nbinom.bias[size[i]]
-    else
-      bias[i] = 0.5
+    }
+    else {
+      bias[i] = compute.nbinom.bias(size[i], xmin, xmax, shape, complement)
+    }
   }
 
   # normalising term
@@ -35,6 +39,6 @@ ebf.nbinom.simple <- function(x, size, xmin, xmax, shape, complement=FALSE) {
   }
 
   # EBF
-  area1 / area2 / exp(bias * area2)
+  area1 / area2 / exp(bias)
 }
 

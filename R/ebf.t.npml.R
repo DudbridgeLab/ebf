@@ -143,14 +143,21 @@ ebf.t.npml <- function(x, se, df, index, xmin, xmax, complement=FALSE,
 
   pml.numer = pml.numer / (nboot+1)
   pml.denom = pml.denom / (nboot+1)
+
+  if (complement == FALSE)
+    tails = is.infinite(xmin) + is.infinite(xmax)
+  else
+    tails = is.finite(xmin) + is.finite(xmax)
+
   for(i in index) {
     # bias correction
     if (df[i] <= length(t.bias))
       bias = t.bias[df[i]]
     else
       bias = 0.5
+
     pml[i] = pml.numer[i] / pml.denom[i] /
-      exp(pml.denom[i] * bias * 2 / (npoints+1))
+      exp(pml.denom[i] * bias * tails / (npoints+1))
   }
 
   pml

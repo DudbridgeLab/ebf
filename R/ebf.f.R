@@ -63,9 +63,9 @@ ebf.f <- function(x,
   if (is.null(bias))
     for(i in index) {
       if (df1[i] <= nrow(f.bias) & df2[i] <= ncol(f.bias))
-        bias[i] = f.bias[df1[i], df2[i]] * pf(x[i], df1[i], df2[i])
+        bias[i] = f.bias[df1[i], df2[i]]
       else
-        bias[i] = compute.f.bias(df1[i], df2[i]) * pf(x[i], df1[i], df2[i])
+        bias[i] = compute.f.bias(df1[i], df2[i])
     }
 
   }

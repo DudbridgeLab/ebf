@@ -7,6 +7,10 @@
 #'
 #' @param n Vector of sample sizes for which to compute bias.
 #'
+#' @param xmin Minimum probability of interval hypothesis.
+#'
+#' @param xmax Maximum probability of interval hypothesis.
+#'
 #' @param shape Parameter of symmetrical Beta prior distribution.
 #'
 #' @import stats
@@ -18,7 +22,7 @@
 #'
 #' @export
 
-compute.binom.bias <- function(n=1:100, shape=1) {
+compute.binom.bias <- function(n=1:100, xmin=0, xmax=1, shape=1, complement=FALSE) {
 
   # bias for each sample size
   bias = NULL
@@ -26,39 +30,37 @@ compute.binom.bias <- function(n=1:100, shape=1) {
   # loop through sample sizes
   for(i in n) {
 
-    # find the maximum bias over the success probabilities
-    #bias = c(bias, optimise(function(p) {
+    # find the integrated bias over the success probabilities
     bias = c(bias, integrate(function(p) {
+      bias.i = 0
       # observed data
-      PML.obs = 0
-      PML.var = 0
       for(k.obs in 0:i) {
-
+        if (complement == FALSE)
+          b1 = pbeta(xmax, 2*k.obs+shape, 2*(i-k.obs)+shape) -
+            pbeta(xmin, 2*k.obs+shape, 2*(i-k.obs)+shape)
+        else
+          b1 = pbeta(xmin, 2*k.obs+shape, 2*(i-k.obs)+shape) +
+            pbeta(xmax, 2*k.obs+shape, 2*(i-k.obs)+shape, lower=F)
+        b1 = b1/dbinom(k.obs,i,0.5)
         # replicate data
-        PML.rep = 0
         for(k.rep in 0:i) {
-          # posterior marginal likelihood
-          PML.rep = PML.rep + dbinom(k.rep, i, p) *
-            #(lchoose(i, k.rep) + lbeta(k.obs+k.rep+shape, 2*i-k.obs-k.rep+shape))
-            log(integrate(function(pp) dbinom(k.rep, i, pp) * dbeta(pp, k.obs+shape, i-k.obs+shape),
-                      0.3, 0.7)$value)
+          if (complement == FALSE)
+            b2 = pbeta(xmax, k.obs+k.rep+shape, 2*i-k.obs-k.rep+shape) -
+              pbeta(xmin, k.obs+k.rep+shape, 2*i-k.obs-k.rep+shape)
+          else
+            b2 = pbeta(xmin, k.obs+k.rep+shape, 2*i-k.obs-k.rep+shape) +
+              pbeta(xmax, k.obs+k.rep+shape, 2*i-k.obs-k.rep+shape, lower=F)
+          b2 = b2/dbinom(k.rep,i,0.5)
+          if (b1 > 0 & b2 > 0)
+            bias.i = bias.i + dbinom(k.obs, i, p) * dbinom(k.rep, i, p) *
+              (lchoose(i, k.obs) + lbeta(2*k.obs+shape, 2*(i-k.obs)+shape) + log(b1) -
+                 lchoose(i, k.rep) - lbeta(k.obs+k.rep+shape, 2*i-k.obs-k.rep+shape) -
+                 log(b2))
         }
-
-        # the bias for this observed data
-        PML.obs = PML.obs + dbinom(k.obs, i, p) *
-#          (lchoose(i, k.obs) + lbeta(2*k.obs+shape, 2*(i-k.obs)+shape) -
-#             PML.rep)
-        (log(integrate(function(pp) dbinom(k.obs, i, pp) * dbeta(pp, k.obs+shape, i-k.obs+shape),
-                       0.3, 0.7)$value) - PML.rep)
-        PML.var = PML.var + dbinom(k.obs, i, p) *
-          (lchoose(i, k.obs) + lbeta(2*k.obs+shape, 2*(i-k.obs)+shape) -
-             PML.rep)^2
       }
 
       # expectation over observed data
-      PML.obs
-      #PML.var - PML.obs^2
-     #}, c(0, 1), maximum=TRUE)$objective)
+      bias.i^2 * dbeta(p, shape, shape)
     }, 0, 1)$value)
   }
 

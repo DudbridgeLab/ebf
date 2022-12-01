@@ -10,11 +10,13 @@ ebf.t.simple <- function(x, se, xmin, xmax, df, complement=FALSE) {
                   lgamma(df/2)*2 - lgamma(df+1) - (log(df) + log(pi))/2) *
       (pt((xmax-x)/se * sqrt(1/df + 2), 2*df+1) -
          pt((xmin-x)/se * sqrt(1/df + 2), 2*df+1)) /se
+    tails = is.infinite(xmin) + is.infinite(xmax)
   } else {
     area1 = exp(lgamma((df+1)/2)*2 + lgamma(df+0.5) -
                   lgamma(df/2)*2 - lgamma(df+1) - (log(df) + log(pi))/2) *
       (pt((xmin-x)/se * sqrt(1/df + 2), 2*df+1) +
          pt((xmax-x)/se * sqrt(1/df + 2), 2*df+1, lower=F)) / se
+    tails = is.finite(xmin) + is.finite((xmax))
   }
 
 
@@ -22,9 +24,9 @@ ebf.t.simple <- function(x, se, xmin, xmax, df, complement=FALSE) {
   bias = rep(0, length(x))
   for(i in 1:length(x)) {
     if (df[i] <= length(t.bias))
-      bias[i] = t.bias[df[i]]
+      bias[i] = t.bias[df[i]] * tails/2
     else
-      bias[i] = 0.5
+      bias[i] = 0.5 * tails/2
   }
 
   # normalising term
@@ -35,6 +37,6 @@ ebf.t.simple <- function(x, se, xmin, xmax, df, complement=FALSE) {
   }
 
   # EBF
-  area1 / area2 / exp(bias * area2)
+  area1 / area2 / exp(bias)
 }
 

@@ -16,9 +16,12 @@ ebf.poisson.npml <- function(x, interval, index, xmin, xmax, complement=FALSE,
   # bootstrap loop
   for(boot in 0:nboot) {
     if (boot == 0) x.boot = x[points]
-    else x.boot = rpois(npoints,
-                        sample(np.support.mle, npoints, replace=T, prob=np.weights.mle) *
-                          interval[points])
+    else {
+      if (npoints == 1) x.boot = rpois(npoints, np.support.mle) * interval[points]
+      else x.boot = rpois(npoints,
+                          sample(np.support.mle, npoints, replace=T, prob=np.weights.mle) *
+                            interval[points])
+    }
 
     # initialise
     np.support = seq(min(x.boot/interval[points], na.rm=T),
@@ -120,12 +123,12 @@ ebf.poisson.npml <- function(x, interval, index, xmin, xmax, complement=FALSE,
   pml.numer = pml.numer / (nboot+1)
   pml.denom =  pml.denom / (nboot+1)
 
-  # maximum bias corresponds to lambda=6.411577
-  bias = 0.5003284
+  if (xmax==Inf) bias = 0.5
+  else bias = 0
 
   for(i in index) {
     pml[i] = pml.numer[i] / pml.denom[i] /
-      exp(pml.denom[i] * bias * 2 / (npoints+1))
+      exp(bias * 2 / (npoints+1))
   }
 
   pml

@@ -13,10 +13,10 @@ ebf.poisson.simple <- function(x, interval, xmin, xmax, complement=FALSE) {
     area2 = pgamma(xmin, x+1, interval) + pgamma(xmax, x+1, interval, lower=F)
   }
 
-  # maximum bias corresponds to lambda=6.411577
-  bias = 0.5003284
+  if (xmax==Inf) bias = 0.5
+  else bias = 0
 
   # EBF
-  area1 / area2 / exp(bias * area2)
+  area1 / area2 / exp(bias)
 }
 

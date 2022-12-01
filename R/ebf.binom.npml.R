@@ -16,9 +16,11 @@ ebf.binom.npml <- function(x, size, index, xmin, xmax, shape, complement=FALSE,
   # bootstrap loop
   for(boot in 0:nboot) {
     if (boot == 0) x.boot = x[points]
-    else
-      x.boot = rbinom(npoints, size[points],
-                      sample(np.support.mle, npoints, replace=T, prob=np.weights.mle))
+    else {
+      if (npoints == 1) x.boot = rbinom(npoints, size[points], np.support.mle)
+      else x.boot = rbinom(npoints, size[points],
+                           sample(np.support.mle, npoints, replace=T, prob=np.weights.mle))
+    }
 
     # initialise
     np.support = seq(min(x.boot/size[points], na.rm=T), max(x.boot/size[points], na.rm=T),
@@ -130,13 +132,18 @@ ebf.binom.npml <- function(x, size, index, xmin, xmax, shape, complement=FALSE,
   pml.denom =  pml.denom / (nboot+1)
 
   for(i in index) {
-    # bias correction
-    if (size[i] <= length(binom.bias))
+    # bias
+    if (shape == 1 & size[i] <= length(binom.bias) &
+        (complement == FALSE & xmin == 0 & xmax == 1 |
+         complement == TRUE & xmin == xmax)) {
       bias = binom.bias[size[i]]
-    else
-      bias = 0.5
+    }
+    else {
+      bias = compute.binom.bias(size[i], xmin, xmax, shape, complement)
+    }
+
     pml[i] = pml.numer[i] / pml.denom[i] /
-      exp(pml.denom[i] * bias * 2 / (npoints+1))
+      exp(bias * 2 / (npoints+1))
   }
 
   pml

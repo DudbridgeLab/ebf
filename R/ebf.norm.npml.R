@@ -109,11 +109,16 @@ ebf.norm.npml <- function(x, se, index, xmin, xmax, complement=FALSE,
 
   } # bootstrap loop
 
+  if (complement==FALSE)
+    tails = is.infinite(xmin) + is.infinite(xmax)
+  else
+    tails = is.finite(xmin) + is.finite(xmax)
+
   pml.numer = pml.numer / (nboot+1)
   pml.denom = pml.denom / (nboot+1)
   for(i in index)
     pml[i] =  pml.numer[i] / pml.denom[i] /
-    exp(pml.denom[i] / (npoints + 1))
+    exp(2/(npoints + 1) * 0.5 * tails / 2)
 
   pml
 }
