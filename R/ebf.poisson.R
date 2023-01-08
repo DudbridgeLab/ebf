@@ -26,6 +26,13 @@
 #' In this case \code{h1} defaults to \code{c(1,Inf)}.
 #' To test lower values against higher values, use \code{h0=c(1,Inf)}.
 #'
+#' @param shape Shape parameter of the prior Gamma distribution.
+#' @param rate Rate parameter of the prior Gamma distribution.
+#'
+#' The defaults for both parameters are \code{1e-6} to approximate a
+#' non-informative prior.  When \code{x==0} it is worth trying
+#' different values to be sure that the EBF is the limit as
+#' \code{shape, rate} tend to zero.
 #'
 #' @import stats
 #'
@@ -39,14 +46,11 @@ ebf.poisson <- function(x,
                         h0=1,
                         h1=NULL,
                         shrink=FALSE,
-                        npoints=1000,
-                        nsupport=20,
-                        tol=1e-5,
-                        nboot=0,
-                        seed=0
-                        ) {
+                        shape=1,
+                        rate=0,
+                        points=NULL,
+                        pi0=0) {
 
-  set.seed(seed)
   if (length(h0) == 1) h0 = c(h0, h0)
   if (length(h1) == 1) h1 = c(h1, h1)
   if (is.null(index)) index=1:length(x)
@@ -59,17 +63,20 @@ ebf.poisson <- function(x,
   if (h0[1] == h0[2]) ebf.h0 = dpois(x, interval * h0[1])
 
   ### interval hypothesis
-  if (h0[1] != h0[2]) ebf.h0 = ebf.poisson.simple(x, interval, min(h0), max(h0))
+  if (h0[1] != h0[2]) ebf.h0 = ebf.poisson.simple(x, interval,
+                                                  min(h0), max(h0), shape, rate)
 
   # alternative hypothesis
   if (!is.null(h1)) {
     ### point hypothesis
     if (h1[1] == h1[2]) ebf.h1 = dpois(x, interval * h1[1])
     ### interval hypothesis
-    if (h1[1] != h1[2]) ebf.h1 = ebf.poisson.simple(x, interval, min(h1), max(h1))
+    if (h1[1] != h1[2]) ebf.h1 = ebf.poisson.simple(x, interval,
+                                                    min(h1), max(h1), shape, rate)
   }
   ### complement interval
-  if (is.null(h1)) ebf.h1 = ebf.poisson.simple(x, interval, min(h0), max(h0), TRUE)
+  if (is.null(h1)) ebf.h1 = ebf.poisson.simple(x, interval,
+                                               min(h0), max(h0), shape, rate, TRUE)
 
   # EBFs
   ebf = ebf.h1 / ebf.h0
@@ -102,31 +109,40 @@ ebf.poisson <- function(x,
   ebf.shrink.units = NULL
   if (shrink == TRUE) {
 
-    # select points to use in estimating shrinkage EBFs
-    if (length(x) < npoints) points = 1:length(x)
-    else points = sample(1:length(x), npoints)
+    # data points for estimating non-parametric distribution
+    if (is.null(points)) points = 1:length(x)
 
     # null hypothesis
     ### point hypothesis
     if (h0[1] == h0[2]) ebf.h0.shrink = ebf.h0
     ### interval hypothesis
     if (h0[1] != h0[2])
-      ebf.h0.shrink = ebf.poisson.npml(x, interval, index, min(h0), max(h0), FALSE,
-                                       points, nsupport, tol, nboot)
+      ebf.h0.shrink = ebf.poisson.shrink(x, interval, index, min(h0), max(h0),
+                                         shape, rate, points)
 
     # alternative hypothesis
     if (!is.null(h1)) {
       ### point hypothesis
       if (h1[1] == h1[2]) ebf.h1.shrink = ebf.h1
       ### interval hypothesis
-      if (h1[1] != h1[2])
-        ebf.h1.shrink = ebf.poisson.npml(x, interval, index, min(h1), max(h1), FALSE,
-                                         points, nsupport, tol, nboot)
+      if (h1[1] != h1[2]) {
+        if (h0[1] == h0[2])
+          ebf.h1.shrink = ebf.poisson.shrink(x, interval, index, min(h1), max(h1),
+                                             shape, rate, points, pi0)
+        else
+          ebf.h1.shrink = ebf.poisson.shrink(x, interval, index, min(h1), max(h1),
+                                             shape, rate, points)
+      }
     }
     ### complement interval
-    if (is.null(h1))
-      ebf.h1.shrink = ebf.poisson.npml(x, interval, index, min(h0), max(h0), TRUE,
-                                       points, nsupport, tol, nboot)
+    if (is.null(h1)) {
+      if (h0[1] == h0[2])
+        ebf.h1.shrink = ebf.poisson.shrink(x, interval, index, min(h0), max(h0),
+                                           shape, rate, points, pi0, TRUE)
+      else
+        ebf.h1.shrink = ebf.poisson.shrink(x, interval, index, min(h0), max(h0),
+                                           shape, rate, points, complement=TRUE)
+    }
 
     ebf.shrink = ebf.h1.shrink / ebf.h0.shrink
     ebf.shrink.units = log(ebf.shrink) / log((sqrt(3)+1)/(sqrt(3)-1))
@@ -137,8 +153,8 @@ ebf.poisson <- function(x,
                       ebf.units = ebf.units[index])
 
   if (sum(!is.na(p[index])) > 0) result = data.frame(result,
-                                          p = p[index],
-                                          p.log10 = p.log10[index])
+                                                     p = p[index],
+                                                     p.log10 = p.log10[index])
 
   if (shrink == TRUE) result = data.frame(result,
                                           ebf.shrink = ebf.shrink[index],

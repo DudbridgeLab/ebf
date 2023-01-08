@@ -1,9 +1,14 @@
 # Calculate normal EBFs with shrinkage
 
-ebf.norm.shrink <- function(x, se, index, xmin, xmax, points, complement=FALSE) {
+ebf.norm.shrink <- function(x, se, index, xmin, xmax, points, pi0=0, complement=FALSE) {
+
+  if (complement==FALSE)
+    tails = is.infinite(xmin) + is.infinite(xmax)
+  else
+    tails = is.finite(xmin) + is.finite(xmax)
 
   # posterior marginal likelihood
-  pml = NULL
+  pml = rep(0, length(x))
   for(i in index) {
 
     # add current test onto subset of points
@@ -13,26 +18,26 @@ ebf.norm.shrink <- function(x, se, index, xmin, xmax, points, complement=FALSE) 
     # Laplace approximation
     ivw.var = 1/se[i]^2 + 1/se[points]^2
     ivw.mean = (x[i]/se[i]^2 + x[points]/se[points]^2) / ivw.var
-
     laplace = dnorm(x[i], ivw.mean, se[i]) *
       dnorm(x[points], ivw.mean, se[points]) *
       sqrt(2 * pi / ivw.var)
 
     area1 = pnorm(xmax, ivw.mean, 1/sqrt(ivw.var)) -
       pnorm(xmin, ivw.mean, 1/sqrt(ivw.var))
-    area2 = mean(pnorm(xmax, x[points], se[points]) - pnorm(xmin, x[points], se[points]))
+    area2 = pnorm(xmax, x[points], se[points]) - pnorm(xmin, x[points], se[points])
     if (complement == TRUE) {
       area1 = pnorm(xmin, ivw.mean, 1/sqrt(ivw.var)) +
         pnorm(xmax, ivw.mean, 1/sqrt(ivw.var), lower=F)
-      area2 = mean(pnorm(xmin, x[points], se[points]) + pnorm(xmax, x[points], se[points], lower=F))
+      area2 = pnorm(xmin, x[points], se[points]) + pnorm(xmax, x[points], se[points], lower=F)
     }
 
-    laplace[match(i,points)] = laplace[match(i,points)] / exp(area2*0.5)
+    ix = match(i,points)
+    laplace[ix] = laplace[ix] / exp(0.5*tails/2) / (1-pi0)
+    area2[ix] = area2[ix] / (1-pi0)
 
-    pml = c(pml, mean(laplace * area1) / area2)
+    pml[i] = sum(laplace*area1) / sum(area2)
 
     points = points.save
   }
   pml
 }
-

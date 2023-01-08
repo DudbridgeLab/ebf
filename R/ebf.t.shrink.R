@@ -1,9 +1,9 @@
 # Calculate t EBFs with shrinkage
 
-ebf.t.shrink <- function(x, se, df, index, xmin, xmax, points, complement=FALSE) {
+ebf.t.shrink <- function(x, se, df, index, xmin, xmax, points, pi0=0, complement=FALSE) {
 
   # posterior marginal likelihood
-  pml = NULL
+  pml = rep(0, length(x))
   for(i in index) {
 
     # add current test onto subset of points
@@ -25,11 +25,11 @@ ebf.t.shrink <- function(x, se, df, index, xmin, xmax, points, complement=FALSE)
 
     # normalising terms
     if (complement == FALSE)
-      area2 = mean(pt((xmax-x[points])/se[points], df[points]) -
-                     pt((xmin-x[points])/se[points], df[points]))
+      area2 = pt((xmax-x[points])/se[points], df[points]) -
+      pt((xmin-x[points])/se[points], df[points])
     else
-      area2 = mean(pt((xmin-x[points])/se[points], df[points]) +
-                     pt((xmax-x[points])/se[points], df[points], lower=F))
+      area2 = pt((xmin-x[points])/se[points], df[points]) +
+      pt((xmax-x[points])/se[points], df[points], lower=F)
 
     # adjust the diagonal elements for bias
     if (df[i] <= length(t.bias))
@@ -37,10 +37,12 @@ ebf.t.shrink <- function(x, se, df, index, xmin, xmax, points, complement=FALSE)
     else
       bias = 0.5
 
-    area1[match(i,points)] = area1[match(i,points)] / exp(area2 * bias)
+    ix = match(i,points)
+    area1[ix] = area1[ix] / exp(bias) / (1-pi0)
+    area2[ix] = area2[ix] / (1-pi0)
 
     # form the EBFs
-    pml = c(pml, mean(area1) / area2)
+    pml[i] = sum(area1) / sum(area2)
 
     # restore subset of points
     points = points.save

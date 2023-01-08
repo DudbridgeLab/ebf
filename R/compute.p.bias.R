@@ -33,12 +33,8 @@ compute.p.bias <- function(shape=1, nsample=0) {
       bias[i] = cubature::cubintegrate(function(x) {
         q.obs = log(1-x[1])
         q.rep = log(1-x[1]) + log(1-x[2])
-        #q.obs = log(x[1])
-        #q.rep = log(x[1]) + log(x[2])
         pbf.obs = -1/4/q.obs^3 + 1/2/q.obs^2 - 1/2/q.obs
         pbf.rep = -2/q.rep^3 + 2/q.rep^2 - 1/q.rep
-        #pbf.obs = -1/4/q.obs^3 / exp(q.obs)
-        #pbf.rep = -2/q.rep^3 / exp(q.rep)
         dbeta(x[1], 1, shape[i]) * dbeta(x[2], 1, shape[i]) *
           (log(pbf.obs) - log(pbf.rep))
       }, c(0,0), c(1,1))$integral
@@ -53,8 +49,6 @@ compute.p.bias <- function(shape=1, nsample=0) {
       q.rep = log(1-p.obs) + log(1-p.rep)
       pbf.obs = -1/4/q.obs^3 + 1/2/q.obs^2 - 1/2/q.obs
       pbf.rep = -2/q.rep^3 + 2/q.rep^2 - 1/q.rep
-      #pbf.obs = -1/4/q.obs^3 / exp(q.obs)
-      #pbf.rep = -2/q.rep^3 / exp(q.rep)
       w = which(pbf.obs>0 & pbf.rep>0)
       bias.i[w] =
         (log(pbf.obs[w]) - log(pbf.rep[w]))

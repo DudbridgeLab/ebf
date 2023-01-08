@@ -19,13 +19,9 @@
 ebf.p <- function(x,
                   index=NULL,
                   shrink=FALSE,
-                  npoints=1000,
-                  nsupport=20,
-                  tol=1e-5,
-                  nboot=0,
-                  seed=0) {
+                  points=NULL,
+                  pi0=0) {
 
-  set.seed(seed)
   if (is.null(index)) index=1:length(x)
 
   # EBFs
@@ -42,12 +38,9 @@ ebf.p <- function(x,
   if (shrink) {
 
     # data points for estimating non-parametric distribution
-    if (length(x) < npoints) points = 1:length(x)
-    else points = sample(1:length(x), npoints)
+    if (is.null(points)) points = 1:length(x)
 
-    # number of support points in non-parametric distribution
-    nsupport = min(length(x), nsupport)
-    ebf.shrink = ebf.p.npml(x, index, points, nsupport, tol, nboot)
+    ebf.shrink = ebf.p.shrink(x, index, points, pi0)
     ebf.shrink.units = log(ebf.shrink) / log((sqrt(3)+1)/(sqrt(3)-1))
   }
 

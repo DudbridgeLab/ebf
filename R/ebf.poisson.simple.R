@@ -1,19 +1,24 @@
 # Calculate simple Poisson EBFs
 
-ebf.poisson.simple <- function(x, interval, xmin, xmax, complement=FALSE) {
+ebf.poisson.simple <- function(x, interval, xmin, xmax, shape, rate, complement=FALSE) {
 
   # posterior mean likelihood
   if (complement == FALSE) {
-    area1 = (pgamma(xmax, 2*x+1, 2*interval) - pgamma(xmin, 2*x+1, 2*interval)) *
-      exp(lfactorial(2*x) - (2*x+1)*log(2) - lfactorial(x) - lfactorial(x))
-    area2 = pgamma(xmax, x+1, interval) - pgamma(xmin, x+1, interval)
+    area1 = (pgamma(xmax, 2*x+shape, 2*interval+rate) -
+               pgamma(xmin, 2*x+shape, 2*interval+rate)) *
+      exp(lgamma(2*x+shape) + (x+shape)*log(interval+rate) -
+            lfactorial(x) - lgamma(x+shape) - (2*x+shape)*log(2*interval+rate))
+    area2 = pgamma(xmax, x+shape, interval+rate) - pgamma(xmin, x+shape, interval+rate)
   } else {
-    area1 = (pgamma(xmin, 2*x+1, 2*interval) + pgamma(xmax, 2*x+1, 2*interval, lower=F)) *
-      exp(lfactorial(2*x) - (2*x+1)*log(2) - lfactorial(x) - lfactorial(x))
-    area2 = pgamma(xmin, x+1, interval) + pgamma(xmax, x+1, interval, lower=F)
+    area1 = (pgamma(xmin, 2*x+shape, 2*interval+rate) +
+               pgamma(xmax, 2*x+shape, 2*interval+rate, lower=F)) *
+      exp(lgamma(2*x+shape) + (x+shape)*log(interval+rate) -
+            lfactorial(x) - lgamma(x+shape) - (2*x+shape)*log(2*interval+rate))
+    area2 = pgamma(xmin, x+shape, interval+rate) +
+      pgamma(xmax, x+shape, interval+rate, lower=F)
   }
 
-  if (xmax==Inf) bias = 0.5
+  if (is.finite(xmax) == complement) bias = 0.5
   else bias = 0
 
   # EBF

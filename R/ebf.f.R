@@ -14,9 +14,9 @@
 #' @template allParams
 #'
 #' @param df1 Vector of numerator degrees of freedom.
-#'
 #' @param df2 Vector of denominator degrees of freedom.
-#'
+#' @param tails Default is 1 for a one-tailed test as in ANOVA.
+#' Can be 2 for a general variance ratio test.
 #' @param bias Vector of biases for each test.
 #'
 #' @return A data frame containing the following components:
@@ -38,6 +38,7 @@
 ebf.f <- function(x,
                   df1, # no default value
                   df2,
+                  tails=1,
                   index=NULL,
                   bias=NULL) {
 
@@ -50,12 +51,15 @@ ebf.f <- function(x,
   # posterior marginal likelihood
   for(i in index) {
 
-    if (df1[i]>1 | df2[i]>1) {
+    if (tails==1 | tails==2) {
       ebf[i] = exp(
-        lbeta(df1[i], df2[i]) - 2*lbeta(df1[i]/2, df2[i]/2) +
-          pf(x[i], 2*df1[i], 2*df2[i], log=T) - pf(x[i], df1[i], df2[i], log=T) -
-          log(x[i]) -
+        lbeta(df1[i], df2[i]) - 2*lbeta(df1[i]/2, df2[i]/2) -
           df(x[i], df1[i], df2[i], log=T)
+      )
+      if (tails==1)
+        ebf[i] = ebf[i] + exp(
+          pf(x[i], 2*df1[i], 2*df2[i], log=T) - pf(x[i], df1[i], df2[i], log=T) -
+          log(x[i])
       )
     }
 
