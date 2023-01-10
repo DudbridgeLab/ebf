@@ -14,7 +14,7 @@
 #' @export
 
 ebf.norm <- function(x,
-                     se=1,
+                     s=1,
                      index=NULL,
                      h0=0,
                      h1=NULL,
@@ -27,23 +27,23 @@ ebf.norm <- function(x,
   if (is.null(index)) index=1:length(x)
 
   # expand into a vector
-  se = rep(0,length(x)) + se
+  s = rep(0,length(x)) + s
 
   # null hypothesis
   ### point hypothesis
-  if (h0[1] == h0[2]) ebf.h0 = dnorm(x, h0[1], se)
+  if (h0[1] == h0[2]) ebf.h0 = dnorm(x, h0[1], s)
   ### interval hypothesis
-  if (h0[1] != h0[2]) ebf.h0 = ebf.norm.simple(x, se, min(h0), max(h0))
+  if (h0[1] != h0[2]) ebf.h0 = ebf.norm.simple(x, s, min(h0), max(h0))
 
   # alternative hypothesis
   if (!is.null(h1)) {
     ### point hypothesis
-    if (h1[1] == h1[2]) ebf.h1 = dnorm(x, h1[1], se)
+    if (h1[1] == h1[2]) ebf.h1 = dnorm(x, h1[1], s)
     ### interval hypothesis
-    if (h1[1] != h1[2]) ebf.h1 = ebf.norm.simple(x, se, min(h1), max(h1))
+    if (h1[1] != h1[2]) ebf.h1 = ebf.norm.simple(x, s, min(h1), max(h1))
   }
   ### complement interval
-  if (is.null(h1)) ebf.h1 = ebf.norm.simple(x, se, min(h0), max(h0), TRUE)
+  if (is.null(h1)) ebf.h1 = ebf.norm.simple(x, s, min(h0), max(h0), TRUE)
 
   # EBFs
   ebf = ebf.h1 / ebf.h0
@@ -54,14 +54,14 @@ ebf.norm <- function(x,
   if (h0[1] == h0[2]) {
     if (!is.null(h1)) {
       ### two-sided test
-      if (h1[1]==-Inf & h1[2]==Inf) p = pnorm(-abs(x-h0[1]), 0, se) *2
+      if (h1[1]==-Inf & h1[2]==Inf) p = pnorm(-abs(x-h0[1]), 0, s) *2
       ### one-sided positive test
-      if (h1[1]==h0[1] & h1[2]==Inf) p = pnorm(x-h0[1], 0, se, lower=F)
+      if (h1[1]==h0[1] & h1[2]==Inf) p = pnorm(x-h0[1], 0, s, lower=F)
       ### one-sided negative test
-      if (h1[1]==-Inf & h1[2]==h0[2]) p = pnorm(x-h0[1], 0, se)
+      if (h1[1]==-Inf & h1[2]==h0[2]) p = pnorm(x-h0[1], 0, s)
     } else {
       ### two-sided test
-      p = pnorm(-abs(x-h0[1]), 0 , se) *2
+      p = pnorm(-abs(x-h0[1]), 0 , s) *2
     }
   }
   p.log10 = NULL
@@ -80,7 +80,7 @@ ebf.norm <- function(x,
     if (h0[1] == h0[2]) ebf.h0.shrink = ebf.h0
     ### interval hypothesis
     if (h0[1] != h0[2])
-      ebf.h0.shrink = ebf.norm.shrink(x, se, index, min(h0), max(h0), points)
+      ebf.h0.shrink = ebf.norm.shrink(x, s, index, min(h0), max(h0), points)
 
     # alternative hypothesis
     if (!is.null(h1)) {
@@ -89,9 +89,9 @@ ebf.norm <- function(x,
       ### interval hypothesis
       if (h1[1] != h1[2]) {
         if (h0[1] == h0[2])
-          ebf.h1.shrink = ebf.norm.shrink(x, se, index, min(h1), max(h1),
+          ebf.h1.shrink = ebf.norm.shrink(x, s, index, min(h1), max(h1),
                                           points, pi0)
-        else ebf.h1.shrink = ebf.norm.shrink(x, se, index, min(h1), max(h1),
+        else ebf.h1.shrink = ebf.norm.shrink(x, s, index, min(h1), max(h1),
                                              points)
       }
     }
@@ -99,10 +99,10 @@ ebf.norm <- function(x,
     ### complement interval
     if (is.null(h1)) {
       if (h0[1] == h0[2])
-        ebf.h1.shrink = ebf.norm.shrink(x, se, index, min(h0), max(h0),
+        ebf.h1.shrink = ebf.norm.shrink(x, s, index, min(h0), max(h0),
                                         points, pi0, TRUE)
       else
-        ebf.h1.shrink = ebf.norm.shrink(x, se, index, min(h0), max(h0),
+        ebf.h1.shrink = ebf.norm.shrink(x, s, index, min(h0), max(h0),
                                       points, complement=TRUE)
     }
 

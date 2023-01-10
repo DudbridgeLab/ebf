@@ -1,6 +1,6 @@
 # Calculate simple t EBFs
 
-ebf.t.simple <- function(x, se, xmin, xmax, df, complement=FALSE) {
+ebf.t.simple <- function(x, s, xmin, xmax, df, complement=FALSE) {
   df[is.infinite(df)] = 1e8
 
   # posterior mean likelihood
@@ -8,14 +8,14 @@ ebf.t.simple <- function(x, se, xmin, xmax, df, complement=FALSE) {
   if (complement == FALSE) {
     area1 = exp(lgamma((df+1)/2)*2 + lgamma(df+0.5) -
                   lgamma(df/2)*2 - lgamma(df+1) - (log(df) + log(pi))/2) *
-      (pt((xmax-x)/se * sqrt(1/df + 2), 2*df+1) -
-         pt((xmin-x)/se * sqrt(1/df + 2), 2*df+1)) /se
+      (pt((xmax-x)/s * sqrt(1/df + 2), 2*df+1) -
+         pt((xmin-x)/s * sqrt(1/df + 2), 2*df+1)) /s
     tails = is.infinite(xmin) + is.infinite(xmax)
   } else {
     area1 = exp(lgamma((df+1)/2)*2 + lgamma(df+0.5) -
                   lgamma(df/2)*2 - lgamma(df+1) - (log(df) + log(pi))/2) *
-      (pt((xmin-x)/se * sqrt(1/df + 2), 2*df+1) +
-         pt((xmax-x)/se * sqrt(1/df + 2), 2*df+1, lower=F)) / se
+      (pt((xmin-x)/s * sqrt(1/df + 2), 2*df+1) +
+         pt((xmax-x)/s * sqrt(1/df + 2), 2*df+1, lower=F)) / s
     tails = is.finite(xmin) + is.finite((xmax))
   }
 
@@ -31,9 +31,9 @@ ebf.t.simple <- function(x, se, xmin, xmax, df, complement=FALSE) {
 
   # normalising term
   if (complement == FALSE ) {
-    area2 = pt((xmax-x)/se, df) - pt((xmin-x)/se, df)
+    area2 = pt((xmax-x)/s, df) - pt((xmin-x)/s, df)
   } else {
-    area2 = pt((xmin-x)/se, df) + pt((xmax-x)/se, df, lower=F)
+    area2 = pt((xmin-x)/s, df) + pt((xmax-x)/s, df, lower=F)
   }
 
   # EBF

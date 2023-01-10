@@ -3,7 +3,7 @@
 #' Calculates empirical Bayes factors (EBFs) for chi-squared tests.
 #'
 #' The assumption is that a likelihood can be defined such that the chi-squared
-#' is approximately equal to twice the difference between the maximised
+#' is approximately twice the difference between the maximised
 #' log-likelihood and the null log-likelihood.  Then it can be shown that
 #' \code{EBF = exp((chi2 - df)/2) / (sqrt(2)^df)}.
 #'

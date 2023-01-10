@@ -3,15 +3,12 @@
 #' Computes the bias in the log posterior marginal likelihood for p-values.
 #'
 #' The p-values are assumed to follow a Beta(1, \code{shape}) distribution,
-#' where \code{shape}>1.
-#' The bias turns out to be about log(5/2) = 0.92 for all values of \code{shape}.
-#'
-#' For large values of \code{shape}, the bias is calculated by numerical integration.
-#'
+#' where \code{shape}>=1.
+#' The bias turns out to be about log(5/2) = 0.92 for most values of \code{shape}.
 #'
 #' @param shape Second parameter for Beta distribution of p-values.
 #'
-#' @param nsample Number of random samples taken to estimate bias
+#' @param nsample Number of random samples taken to estimate bias.
 #' If 0 (default), analytic calculation is made.
 #'
 #' @import stats

@@ -1,16 +1,8 @@
 #' Empirical Bayes factors for Poisson tests
 #'
-#' Calculates empirical Bayes factors (EBFs) for Poisson tests of rates.
-#'
-#' The EBF includes bias adjustments to the log posterior marginal likelihoods.
-#' The adjustment depends on the unknown rate parameter.
-#' The maximum value is 0.5346, corresponding to a rate of 7.301.
-#' This is used to give a conservative EBF.
-#'
-#' If a normal approximation is acceptable, use \code{\link{ebf.norm}}.
+#' Calculates empirical Bayes factors (EBFs) for one-sample Poisson tests of rates.
 #'
 #' @template allParams
-#' @template shrinkParams
 #'
 #' @param interval Vector containing the interval lengths in each test.
 #' The numbers of events are contained in \code{x}.
@@ -20,19 +12,17 @@
 #' the alternative hypothesis.  If \code{NULL} (default), the alternative
 #' hypothesis is the complement of \code{h0}.
 #'
+#' @param shape Shape parameter of the prior Gamma distribution.
+#' @param rate Rate parameter of the prior Gamma distribution.
+#'
+#' @details
 #' The default test has \code{h0=1}, with two-sided alternative.
 #' For one-sided alternatives, use \code{h1=c(1,Inf)} or \code{h1=c(0,1)}.
 #' To test higher values against lower values, use \code{h0=c(0,1)}.
 #' In this case \code{h1} defaults to \code{c(1,Inf)}.
 #' To test lower values against higher values, use \code{h0=c(1,Inf)}.
 #'
-#' @param shape Shape parameter of the prior Gamma distribution.
-#' @param rate Rate parameter of the prior Gamma distribution.
-#'
-#' The defaults for both parameters are \code{1e-6} to approximate a
-#' non-informative prior.  When \code{x==0} it is worth trying
-#' different values to be sure that the EBF is the limit as
-#' \code{shape, rate} tend to zero.
+#' @template shrinkParams
 #'
 #' @import stats
 #'

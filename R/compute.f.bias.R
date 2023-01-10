@@ -14,8 +14,7 @@
 #' @import stats
 #'
 #' @return A matrix with the biases corresponding to the elements of
-#' \code{df1} and \code{df2}.  Numerator degrees of freedom are in rows, denominator degrees of
-#' freedom in columns.
+#' \code{df1} and \code{df2}.
 #'
 #' @template references
 #'

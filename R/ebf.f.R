@@ -4,12 +4,8 @@
 #'
 #' The EBF includes bias adjustments to the log posterior marginal likelihoods.
 #' Pre-computed adjustments are used for \code{df1} and \code{df2} from 1 to 100.
-#' If either are 1, an equivalent two-sided t test is used.
-#' For larger values, the asymptotic adjustment of 0.5 is used.
-#' This may however be inaccurate when there is a large difference between
-#' \code{df1} and \code{df2}.
-#' In that case, \code{\link{compute.f.bias}} can be used to calculate an
-#' accurate adjustment.  This can then be supplied here in the \code{bias} parameter.
+#' For larger values, \code{\link{compute.f.bias}} is used to calculate an
+#' accurate adjustment.  Pre-computed values can be supplied in the \code{bias} parameter.
 #'
 #' @template allParams
 #'
@@ -81,7 +77,8 @@ ebf.f <- function(x,
   # P-value
   p = rep(NA, length(x))
   p.log10 = rep(NA,)
-  p[index] = pf(x[index], df1, df2, lower=F)
+  p[index] = pf(x[index], df1, df2, lower=F) * tails
+  p[p>1] = 2-p[p>1]
   p.log10[index] = -log(p[index])/log(10)
 
   result = data.frame(index =  index,

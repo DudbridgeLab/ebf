@@ -1,5 +1,4 @@
 #' Compute EBF bias for negative binomial tests
-#' This is on hold as the integration over p seems problematical
 #'
 #' Computes the bias in the log posterior marginal likelihood for negative binomial tests.
 #'
@@ -18,9 +17,12 @@
 #'
 #' @param shape Parameter of symmetrical Beta prior distribution.
 #'
+#' @param complement If \code{TRUE}, computes the bias for the complement
+#' of the interval hypothesis.
+#'
 #' @param nsample Number of random samples taken to estimate bias.
 #'
-#' @param seed Random number seed
+#' @param seed Random number seed.
 #'
 #' @import stats
 #'

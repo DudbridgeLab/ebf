@@ -20,8 +20,9 @@ ebf.p.shrink <- function(x, index, points, pi0=0) {
     area2 = pgamma(1, 2, q[points], lower=F)
 
     ix = match(i,points)
-    area1[ix] = area1[ix] / (5/2) / (1-pi0)
-    area2[ix] = area2[ix] / (1-pi0)
+    area1[ix] = area1[ix] / (5/2)
+    area1[-ix] = area1[-ix] * (1-pi0)
+    area2[-ix] = area2[-ix] * (1-pi0)
 
     # form the EBFs
     pml[i] = sum(area1) / sum(area2)

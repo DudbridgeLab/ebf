@@ -1,6 +1,6 @@
 #' Empirical Bayes factors for p-values
 #'
-#' Calculates empirical Bayes factors (EBFs) for standalone p-values.
+#' Calculates empirical Bayes factors (EBFs) for stand-alone p-values.
 #'
 #' P-values are assumed to come from a Beta(1, b) distribution, with
 #' a uniform prior on b from 1 to infinity.  Although this model is flexible,

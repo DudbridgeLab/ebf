@@ -21,7 +21,7 @@
 #' @export
 
 ebf.t <- function(x,
-                  se=1,
+                  s=1,
                   df=Inf,
                   index=NULL,
                   h0=0,
@@ -35,25 +35,25 @@ ebf.t <- function(x,
   if (is.null(index)) index=1:length(x)
 
   # expand into a vector
-  se = rep(0, length(x)) + se
+  s = rep(0, length(x)) + s
   df = rep(0, length(x)) + df
 
   # null hypothesis
   ### point hypothesis
-  if (h0[1] == h0[2]) ebf.h0 = dt((x - h0[1]) /se, df) / se
+  if (h0[1] == h0[2]) ebf.h0 = dt((x - h0[1]) /s, df) / s
 
   ### interval hypothesis
-  if (h0[1] != h0[2]) ebf.h0 = ebf.t.simple(x, se, min(h0), max(h0), df)
+  if (h0[1] != h0[2]) ebf.h0 = ebf.t.simple(x, s, min(h0), max(h0), df)
 
   # alternative hypothesis
   if (!is.null(h1)) {
     ### point hypothesis
-    if (h1[1] == h1[2]) ebf.h1 = dt((x - h1[1]) / se, df) / se
+    if (h1[1] == h1[2]) ebf.h1 = dt((x - h1[1]) / s, df) / s
     ### interval hypothesis
-    if (h1[1] != h1[2]) ebf.h1 = ebf.t.simple(x, se, min(h1), max(h1), df)
+    if (h1[1] != h1[2]) ebf.h1 = ebf.t.simple(x, s, min(h1), max(h1), df)
   }
   ### complement interval
-  if (is.null(h1)) ebf.h1 = ebf.t.simple(x, se, min(h0), max(h0), df, TRUE)
+  if (is.null(h1)) ebf.h1 = ebf.t.simple(x, s, min(h0), max(h0), df, TRUE)
 
   # EBFs
   ebf = ebf.h1 / ebf.h0
@@ -64,14 +64,14 @@ ebf.t <- function(x,
   if (h0[1] == h0[2]) {
     if (!is.null(h1)) {
       ### two-sided test
-      if (h1[1]==-Inf & h1[2]==Inf) p = pt(-abs(x-h0[1]) / se, df) *2
+      if (h1[1]==-Inf & h1[2]==Inf) p = pt(-abs(x-h0[1]) / s, df) *2
       ### one-sided positive test
-      if (h1[1]==h0[1] & h1[2]==Inf) p = pt((x-h0[1]) / se, df, lower=F)
+      if (h1[1]==h0[1] & h1[2]==Inf) p = pt((x-h0[1]) / s, df, lower=F)
       ### one-sided negative test
-      if (h1[1]==-Inf & h1[2]==h0[2]) p = pt((x-h0[2]) / se, df)
+      if (h1[1]==-Inf & h1[2]==h0[2]) p = pt((x-h0[2]) / s, df)
     } else {
       ### two-sided test
-      p = pt(-abs(x-h0[1]) / se, df) *2
+      p = pt(-abs(x-h0[1]) / s, df) *2
     }
   }
   p.log10 = NULL
@@ -90,7 +90,7 @@ ebf.t <- function(x,
     if (h0[1] == h0[2]) ebf.h0.shrink = ebf.h0
     ### interval hypothesis
     if (h0[1] != h0[2])
-      ebf.h0.shrink = ebf.t.shrink(x, se, df, index, min(h0), max(h0),
+      ebf.h0.shrink = ebf.t.shrink(x, s, df, index, min(h0), max(h0),
                                    points)
 
     # alternative hypothesis
@@ -100,20 +100,20 @@ ebf.t <- function(x,
       ### interval hypothesis
       if (h1[1] != h1[2]) {
         if (h0[1] == h0[2])
-          ebf.h1.shrink = ebf.t.shrink(x, se, df, index, min(h1), max(h1),
+          ebf.h1.shrink = ebf.t.shrink(x, s, df, index, min(h1), max(h1),
                                      points, pi0)
         else
-          ebf.h1.shrink = ebf.t.shrink(x, se, df, index, min(h1), max(h1),
+          ebf.h1.shrink = ebf.t.shrink(x, s, df, index, min(h1), max(h1),
                                      points)
       }
     }
     ### complement interval
     if (is.null(h1)) {
       if (h0[1] == h0[2])
-        ebf.h1.shrink = ebf.t.shrink(x, se, df, index, min(h0), max(h0),
+        ebf.h1.shrink = ebf.t.shrink(x, s, df, index, min(h0), max(h0),
                                    points, pi0, TRUE)
       else
-        ebf.h1.shrink = ebf.t.shrink(x, se, df, index, min(h0), max(h0),
+        ebf.h1.shrink = ebf.t.shrink(x, s, df, index, min(h0), max(h0),
                                    points, complement=TRUE)
     }
 

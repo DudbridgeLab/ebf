@@ -23,21 +23,15 @@
 #' @export
 
 compute.poisson.bias <- function(xmin=0, xmax=Inf, shape=1, rate=0,
-                                 complement=FALSE, quant=1e-4, limit=100) {
+                                 quant=1e-4, limit=100) {
 
   quant = min(quant, 1-quant)
 
   bias = 0
   for(i in 0:limit) {
-    if (complement == FALSE)
-      b1 = pgamma(xmax, 2*i+shape, 2+rate) - pgamma(xmin, 2*i+shape, 2+rate)
-    else
-      b1 = pgamma(xmin, 2*i+shape, 2+rate) + pgamma(xmax, 2*i+shape, 2+rate, lower=F)
+    b1 = pgamma(xmax, 2*i+shape, 2+rate) - pgamma(xmin, 2*i+shape, 2+rate)
     for(j in qpois(quant, qgamma(quant, i+1, 1)):qpois(1-quant, qgamma(1-quant, i+1, 1))) {
-      if (complement == FALSE)
-        b2 = pgamma(xmax, i+j+shape, 2+rate) - pgamma(xmin, i+j+shape, 2+rate)
-      else
-        b2 = pgamma(xmin, i+j+shape, 2+rate) + pgamma(xmin, i+j+shape, 2+rate, lower=F)
+      b2 = pgamma(xmax, i+j+shape, 2+rate) - pgamma(xmin, i+j+shape, 2+rate)
       if (b1 >0 & b2 > 0)
         bias = bias +
           # probability of j and i, marginal over lambda

@@ -13,6 +13,9 @@
 #'
 #' @param shape Parameter of symmetrical Beta prior distribution.
 #'
+#' @param complement If \code{TRUE}, computes the bias for the complement
+#' of the interval hypothesis.
+#'
 #' @import stats
 #'
 #' @return A vector with the biases corresponding to the elements of

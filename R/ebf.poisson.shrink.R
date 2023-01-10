@@ -33,8 +33,9 @@ ebf.poisson.shrink <- function(x, interval, index, xmin, xmax, shape, rate,
 
     # adjust the diagonal elements for bias
     ix = match(i,points)
-    area1[ix] = area1[ix] / exp(bias) / (1-pi0)
-    area2[ix] = area2[ix] / (1-pi0)
+    area1[ix] = area1[ix] / exp(bias)
+    area1[-ix] = area1[-ix] * (1-pi0)
+    area2[-ix] = area2[-ix] * (1-pi0)
 
     # form the EBFs
     pml[i] = sum(area1) / sum(area2)
