@@ -39,7 +39,7 @@ for sample sizes 1 to 100 with uniform prior.
 Dudbridge F (2022) A scale of interpretation for likelihood ratios and Bayes factors.
 arXiv:2212.06669
 
-Dudbridge F (in preparation) Empirical Bayes factors.
+Dudbridge F (in preparation) Empirical Bayes factors for common hypothesis tests.
 }
 \author{
 Frank Dudbridge

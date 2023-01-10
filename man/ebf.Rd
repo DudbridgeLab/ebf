@@ -7,6 +7,7 @@
 \description{
 Package for calculating empirical Bayes factors (EBFs) for a set of statistics.
 Normal, t, binomial, negative binomial, Poisson, F and chi-squared tests are available.
+For non-parametric tests, direct conversion of P-values to EBFs is possible.
 Two-sided, one-sided and interval hypotheses can be tested.
 }
 \section{Main functions}{
@@ -25,5 +26,16 @@ Two-sided, one-sided and interval hypotheses can be tested.
 \code{\link{ebf.f}}
 
 \code{\link{ebf.chisq}}
+
+\code{\link{ebf.p}}
 }
 
+\references{
+Dudbridge F (2022) A scale of interpretation for likelihood ratios and Bayes factors.
+arXiv:2212.06669
+
+Dudbridge F (in preparation) Empirical Bayes factors for common hypothesis tests.
+}
+\author{
+Frank Dudbridge
+}

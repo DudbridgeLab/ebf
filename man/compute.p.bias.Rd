@@ -28,7 +28,7 @@ The bias turns out to be about log(5/2) = 0.92 for most values of \code{shape}.
 Dudbridge F (2022) A scale of interpretation for likelihood ratios and Bayes factors.
 arXiv:2212.06669
 
-Dudbridge F (in preparation) Empirical Bayes factors.
+Dudbridge F (in preparation) Empirical Bayes factors for common hypothesis tests.
 }
 \author{
 Frank Dudbridge
