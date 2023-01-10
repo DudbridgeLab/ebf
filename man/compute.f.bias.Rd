@@ -25,7 +25,7 @@ The bias is computed by numerically integrating over a bivariate F distriubtion.
 This requires the \code{cubature} library.
 }
 \references{
-Dudbridge F (2022) A scale of evidence for likelihood ratios.
+Dudbridge F (2022) A scale of interpretation for likelihood ratios and Bayes factors.
 arXiv:2212.06669
 
 Dudbridge F (in preparation) Empirical Bayes factors.

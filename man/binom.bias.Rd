@@ -17,13 +17,8 @@ Bias is computed by the \code{\link{compute.binom.bias}} function using enumerat
 Sample sizes range from 1 to 100.
 The uniform prior is used.
 }
-\details{
-The bias depends on the true success probability.
-As this is unknown, the bias is maximised over the probability to give
-a conservative estimate.
-}
 \references{
-Dudbridge F (2022) A scale of evidence for likelihood ratios.
+Dudbridge F (2022) A scale of interpretation for likelihood ratios and Bayes factors.
 arXiv:2212.06669
 
 Dudbridge F (in preparation) Empirical Bayes factors.

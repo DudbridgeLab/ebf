@@ -33,7 +33,7 @@ The bias, which is 0.5 when \code{xmax==Inf} and 0 otherwise.
 Computes the bias in the log posterior marginal likelihood for Poisson rates.
 }
 \references{
-Dudbridge F (2022) A scale of evidence for likelihood ratios.
+Dudbridge F (2022) A scale of interpretation for likelihood ratios and Bayes factors.
 arXiv:2212.06669
 
 Dudbridge F (in preparation) Empirical Bayes factors.

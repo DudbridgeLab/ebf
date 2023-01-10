@@ -67,7 +67,7 @@ other tests.  The default \code{pi0=0} assumes that the hypothesis is true
 for all tests.  If \code{pi0=1}, the single-test EBF is recovered.
 }
 \references{
-Dudbridge F (2022) A scale of evidence for likelihood ratios.
+Dudbridge F (2022) A scale of interpretation for likelihood ratios and Bayes factors.
 arXiv:2212.06669
 
 Dudbridge F (in preparation) Empirical Bayes factors.

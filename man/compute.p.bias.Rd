@@ -25,7 +25,7 @@ where \code{shape}>=1.
 The bias turns out to be about log(5/2) = 0.92 for most values of \code{shape}.
 }
 \references{
-Dudbridge F (2022) A scale of evidence for likelihood ratios.
+Dudbridge F (2022) A scale of interpretation for likelihood ratios and Bayes factors.
 arXiv:2212.06669
 
 Dudbridge F (in preparation) Empirical Bayes factors.

@@ -36,7 +36,7 @@ Pre-computed results are in the \code{ebf::binom.bias} object,
 for sample sizes 1 to 100 with uniform prior.
 }
 \references{
-Dudbridge F (2022) A scale of evidence for likelihood ratios.
+Dudbridge F (2022) A scale of interpretation for likelihood ratios and Bayes factors.
 arXiv:2212.06669
 
 Dudbridge F (in preparation) Empirical Bayes factors.
