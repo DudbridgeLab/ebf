@@ -6,22 +6,19 @@
 \usage{
 ebf.norm(
   x,
-  se = 1,
+  s = 1,
   index = NULL,
   h0 = 0,
   h1 = NULL,
   shrink = FALSE,
-  npoints = 1000,
-  nsupport = 20,
-  tol = 1e-05,
-  nboot = 0,
-  seed = 0
+  points = NULL,
+  pi0 = 0
 )
 }
 \arguments{
 \item{x}{Vector of statistics.}
 
-\item{se}{Vector of standard errors associated with \code{x}.}
+\item{s}{Vector of standard deviations or standard errors associated with \code{x}.}
 
 \item{index}{Vector of indices in \code{x}.  EBFs are calculated for
 those elements only. If \code{NULL}, EBFs are calculated for all elements.}
@@ -33,26 +30,14 @@ bounds of the null hypothesis.}
 \item{h1}{If a scalar, the value of a point alternative hypothesis.
 If a vector with two elements, the lower and upper bounds of
 the alternative hypothesis.  If \code{NULL} (default), the alternative
-hypothesis is the complement of \code{h0}.
-
-The default test has \code{h0=0}, with two-sided alternative.
-For one-sided alternatives, use \code{h1=c(0,Inf)} or \code{h1=c(-Inf,0)}.
-To test positive values against negative values, use \code{h0=c(-Inf,0)},
-in which case \code{h1} defaults to \code{c(0,Inf)}.
-To test negative values against positive values, use \code{h0=c(0,Inf)}.}
+hypothesis is the complement of \code{h0}.}
 
 \item{shrink}{If \code{TRUE}, shrinks EBFs to a posterior
 distribution estimated from all the elements of \code{x}.}
 
-\item{npoints}{Number of elements of \code{x} to use in estimating posterior distribution.}
+\item{points}{Vector of indices in \code{x} to use in estimating shrinkage EBFs.}
 
-\item{nsupport}{Number of mixture components in posterior distribution.}
-
-\item{tol}{Convergence tolerance in EM algorithm for fitting posterior distribution.}
-
-\item{nboot}{Number of samples in bootstrap estimation of posterior distribution.}
-
-\item{seed}{Random number seed.}
+\item{pi0}{Proportion of true null hypotheses in shrinkage EBFs.}
 }
 \value{
 A data frame containing the following components:
@@ -75,33 +60,33 @@ Calculates empirical Bayes factors (EBFs) for tests of a scalar normal mean
 with known variance.
 }
 \details{
-For shrinkage EBFs, two approaches are available for estimating the posterior
-distribution.  The default, generally faster option fits a mixture of conjugate
-distributions to \code{x}. All components of the mixture are given the same fixed precision,
-which in general terms is the precision of the posterior when a single component
-is fitted.  (For the t-tests, which do not have a conjugate distribution, a mixture
-of t distributions is fitted, reflecting a flat prior.)
-The number of mixture components can be varied by \code{nsupport}.
+EBFs are calculated in favour of \code{h1}.
 
-If \code{nboot > 0}, a discrete distribution is fitted, corresponding to the
-maximum likelihood non-parametric estimate of the distribution of \code{x}.
-This is also equivalent to the mixture of conjugate distributions where the
-precision is fixed to be infinite.  To account for variation in this estimate,
-EBFs are averaged over parametric bootstrap resamples of \code{x}.
-The number of support points in the fitted distribution can be varied by
-\code{nsupport}.
+The default test has \code{h0=0}, with two-sided alternative.
+For one-sided alternatives, use \code{h1=c(0,Inf)} or \code{h1=c(-Inf,0)}.
+To test positive values against negative values, use \code{h0=c(-Inf,0)},
+in which case \code{h1} defaults to \code{c(0,Inf)}.
+To test negative values against positive values, use \code{h0=c(0,Inf)}.
 
-The calculation may be time-consuming.  To reduce the computation a random subset of
-\code{x} may be used to estimate the posterior distribution.
-By default a maximum of 1000 points is used.
-This number can be varied with the \code{npoints} parameter.
+For shrinkage EBFs, each test is evaluated using the posterior distribution
+obtained from every other test.
+The calculation may be time-consuming when the number of tests is large.
+To reduce the computation a subset of tests can be used instead,
+with indices specified in \code{points}.  Each individual test is appended
+to this list as it is evaluated.
 
 Further reduction can be achieved by calculating EBFs only for the elements
-of \code{x} given by \code{index}.  Those EBFs are calculated using all
-the points in \code{x}, unless varied by \code{npoints}.
+of \code{x} given by \code{index}.  The posterior distribution is still calculated using all
+the points in \code{x}, or those specified in \code{points}.
+
+For test \code{i}, the contributions from tests \code{j!=i} can be weighted
+by \code{pi0} to model the probability that the hypothesis is true for those
+other tests.  The default \code{pi0=0} assumes that the hypothesis is true
+for all tests.  If \code{pi0=1}, the single-test EBF is recovered.
 }
 \references{
-Dudbridge F (submitted) A scale of evidence for likelihood ratios.
+Dudbridge F (2022) A scale of evidence for likelihood ratios.
+arXiv:2212.06669
 
 Dudbridge F (in preparation) Empirical Bayes factors.
 }

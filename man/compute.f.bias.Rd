@@ -13,8 +13,7 @@ compute.f.bias(df1 = 1:100, df2 = 1:100)
 }
 \value{
 A matrix with the biases corresponding to the elements of
-\code{df1} and \code{df2}.  Numerator degrees of freedom are in rows, denominator degrees of
-freedom in columns.
+\code{df1} and \code{df2}.
 }
 \description{
 Computes the bias in the log posterior marginal likelihood for F tests.
@@ -26,7 +25,8 @@ The bias is computed by numerically integrating over a bivariate F distriubtion.
 This requires the \code{cubature} library.
 }
 \references{
-Dudbridge F (submitted) A scale of evidence for likelihood ratios.
+Dudbridge F (2022) A scale of evidence for likelihood ratios.
+arXiv:2212.06669
 
 Dudbridge F (in preparation) Empirical Bayes factors.
 }

@@ -4,16 +4,37 @@
 \alias{compute.poisson.bias}
 \title{Compute EBF bias for Poisson tests}
 \usage{
-compute.poisson.bias()
+compute.poisson.bias(
+  xmin = 0,
+  xmax = Inf,
+  shape = 1,
+  rate = 0,
+  quant = 1e-04,
+  limit = 100
+)
+}
+\arguments{
+\item{xmin}{Minimum probability of interval hypothesis.}
+
+\item{xmax}{Maximum probability of interval hypothesis.}
+
+\item{shape}{Shape parameter of prior Gamma distribution.}
+
+\item{rate}{Rate parameter of prior Gamma distribution.}
+
+\item{quant}{Minimum quantile of Poisson observations for which to compute bias.}
+
+\item{limit}{Upper limit of observed data.}
 }
 \value{
-The maximum bias over the rate parameter, which is 0.5003284.
+The bias, which is 0.5 when \code{xmax==Inf} and 0 otherwise.
 }
 \description{
-Computes the bias in the log posterior marginal likelihood for Poisson tests.
+Computes the bias in the log posterior marginal likelihood for Poisson rates.
 }
 \references{
-Dudbridge F (submitted) A scale of evidence for likelihood ratios.
+Dudbridge F (2022) A scale of evidence for likelihood ratios.
+arXiv:2212.06669
 
 Dudbridge F (in preparation) Empirical Bayes factors.
 }

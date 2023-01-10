@@ -4,16 +4,31 @@
 \alias{compute.nbinom.bias}
 \title{Compute EBF bias for negative binomial tests}
 \usage{
-compute.nbinom.bias(size = 1:100, shape = 1, nsample = 1e+06, seed = 0)
+compute.nbinom.bias(
+  size = 1:100,
+  xmin = 0,
+  xmax = 1,
+  shape = 1,
+  complement = FALSE,
+  nsample = 1000,
+  seed = 0
+)
 }
 \arguments{
 \item{size}{Vector of sample sizes for which to estimate bias.}
 
+\item{xmin}{Minimum probability of interval hypothesis.}
+
+\item{xmax}{Maximum probability of interval hypothesis.}
+
 \item{shape}{Parameter of symmetrical Beta prior distribution.}
+
+\item{complement}{If \code{TRUE}, computes the bias for the complement
+of the interval hypothesis.}
 
 \item{nsample}{Number of random samples taken to estimate bias.}
 
-\item{seed}{Random number seed}
+\item{seed}{Random number seed.}
 }
 \value{
 A vector with the biases corresponding to the elements of
@@ -31,7 +46,8 @@ Therefore the bias is estimated by Monte Carlo
 simulations of observed and replicate data from the negative binomial distribution.
 }
 \references{
-Dudbridge F (submitted) A scale of evidence for likelihood ratios.
+Dudbridge F (2022) A scale of evidence for likelihood ratios.
+arXiv:2212.06669
 
 Dudbridge F (in preparation) Empirical Bayes factors.
 }

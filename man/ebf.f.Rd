@@ -4,7 +4,7 @@
 \alias{ebf.f}
 \title{Empirical Bayes factors for F tests}
 \usage{
-ebf.f(x, df1, df2, index = NULL, bias = NULL)
+ebf.f(x, df1, df2, tails = 1, index = NULL, bias = NULL)
 }
 \arguments{
 \item{x}{Vector of statistics.}
@@ -12,6 +12,9 @@ ebf.f(x, df1, df2, index = NULL, bias = NULL)
 \item{df1}{Vector of numerator degrees of freedom.}
 
 \item{df2}{Vector of denominator degrees of freedom.}
+
+\item{tails}{Default is 1 for a one-tailed test as in ANOVA.
+Can be 2 for a general variance ratio test.}
 
 \item{index}{Vector of indices in \code{x}.  EBFs are calculated for
 those elements only. If \code{NULL}, EBFs are calculated for all elements.}
@@ -34,15 +37,14 @@ Calculates empirical Bayes factors (EBFs) for F tests.
 \details{
 The EBF includes bias adjustments to the log posterior marginal likelihoods.
 Pre-computed adjustments are used for \code{df1} and \code{df2} from 1 to 100.
-If either are 1, an equivalent two-sided t test is used.
-For larger values, the asymptotic adjustment of 0.5 is used.
-This may however be inaccurate when there is a large difference between
-\code{df1} and \code{df2}.
-In that case, \code{\link{compute.f.bias}} can be used to calculate an
-accurate adjustment.  This can then be supplied here in the \code{bias} parameter.
+For larger values, \code{\link{compute.f.bias}} is used to calculate an
+accurate adjustment.  Pre-computed values can be supplied in the \code{bias} parameter.
+
+EBFs are calculated in favour of \code{h1}.
 }
 \references{
-Dudbridge F (submitted) A scale of evidence for likelihood ratios.
+Dudbridge F (2022) A scale of evidence for likelihood ratios.
+arXiv:2212.06669
 
 Dudbridge F (in preparation) Empirical Bayes factors.
 }

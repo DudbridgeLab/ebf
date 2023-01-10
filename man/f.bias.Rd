@@ -18,7 +18,8 @@ Bias is computed by the \code{\link{compute.f.bias}} function using numerical in
 Degrees of freedom range from 1 to 100.
 }
 \references{
-Dudbridge F (submitted) A scale of evidence for likelihood ratios.
+Dudbridge F (2022) A scale of evidence for likelihood ratios.
+arXiv:2212.06669
 
 Dudbridge F (in preparation) Empirical Bayes factors.
 }

@@ -5,41 +5,26 @@
 #' @param shrink If \code{TRUE}, shrinks EBFs to a posterior
 #' distribution estimated from all the elements of \code{x}.
 #'
-#' @param npoints Number of elements of \code{x} to use in estimating posterior distribution.
+#' @param points Vector of indices in \code{x} to use in estimating shrinkage EBFs.
 #'
-#' @param nsupport Number of mixture components in posterior distribution.
-#'
-#' @param tol Convergence tolerance in EM algorithm for fitting posterior distribution.
-#'
-#' @param nboot Number of samples in bootstrap estimation of posterior distribution.
-#'
-#' @param seed Random number seed.
+#' @param pi0 Proportion of true null hypotheses in shrinkage EBFs.
 #'
 #' @details
-#' For shrinkage EBFs, two approaches are available for estimating the posterior
-#' distribution.  The default, generally faster option fits a mixture of conjugate
-#' distributions to \code{x}. All components of the mixture are given the same fixed precision,
-#' which in general terms is the precision of the posterior when a single component
-#' is fitted.  (For the t-tests, which do not have a conjugate distribution, a mixture
-#' of t distributions is fitted, reflecting a flat prior.)
-#' The number of mixture components can be varied by \code{nsupport}.
-#'
-#' If \code{nboot > 0}, a discrete distribution is fitted, corresponding to the
-#' maximum likelihood non-parametric estimate of the distribution of \code{x}.
-#' This is also equivalent to the mixture of conjugate distributions where the
-#' precision is fixed to be infinite.  To account for variation in this estimate,
-#' EBFs are averaged over parametric bootstrap resamples of \code{x}.
-#' The number of support points in the fitted distribution can be varied by
-#' \code{nsupport}.
-#'
-#' The calculation may be time-consuming.  To reduce the computation a random subset of
-#' \code{x} may be used to estimate the posterior distribution.
-#' By default a maximum of 1000 points is used.
-#' This number can be varied with the \code{npoints} parameter.
+#' For shrinkage EBFs, each test is evaluated using the posterior distribution
+#' obtained from every other test.
+#' The calculation may be time-consuming when the number of tests is large.
+#' To reduce the computation a subset of tests can be used instead,
+#' with indices specified in \code{points}.  Each individual test is appended
+#' to this list as it is evaluated.
 #'
 #' Further reduction can be achieved by calculating EBFs only for the elements
-#' of \code{x} given by \code{index}.  Those EBFs are calculated using all
-#' the points in \code{x}, unless varied by \code{npoints}.
+#' of \code{x} given by \code{index}.  The posterior distribution is still calculated using all
+#' the points in \code{x}, or those specified in \code{points}.
+#'
+#' For test \code{i}, the contributions from tests \code{j!=i} can be weighted
+#' by \code{pi0} to model the probability that the hypothesis is true for those
+#' other tests.  The default \code{pi0=0} assumes that the hypothesis is true
+#' for all tests.  If \code{pi0=1}, the single-test EBF is recovered.
 #'
 #' @return A data frame containing the following components:
 #'   \itemize{

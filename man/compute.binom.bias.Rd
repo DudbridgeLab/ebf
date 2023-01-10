@@ -4,26 +4,40 @@
 \alias{compute.binom.bias}
 \title{Compute EBF bias for binomial tests}
 \usage{
-compute.binom.bias(n = 1:100, shape = 1)
+compute.binom.bias(
+  n = 1:100,
+  xmin = 0,
+  xmax = 1,
+  shape = 1,
+  complement = FALSE
+)
 }
 \arguments{
 \item{n}{Vector of sample sizes for which to compute bias.}
 
+\item{xmin}{Minimum probability of interval hypothesis.}
+
+\item{xmax}{Maximum probability of interval hypothesis.}
+
 \item{shape}{Parameter of symmetrical Beta prior distribution.}
+
+\item{complement}{If \code{TRUE}, computes the bias for the complement
+of the interval hypothesis.}
 }
 \value{
 A vector with the biases corresponding to the elements of
 \code{n}.
 }
 \description{
-Computes the bias in the log posterior marginal likelihood for binomial tests.
+Computes the bias in the log posterior marginal likelihood for binomial proportions.
 }
 \details{
 Pre-computed results are in the \code{ebf::binom.bias} object,
 for sample sizes 1 to 100 with uniform prior.
 }
 \references{
-Dudbridge F (submitted) A scale of evidence for likelihood ratios.
+Dudbridge F (2022) A scale of evidence for likelihood ratios.
+arXiv:2212.06669
 
 Dudbridge F (in preparation) Empirical Bayes factors.
 }
