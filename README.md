@@ -33,19 +33,19 @@ For main documentation, `help(ebf::ebf)`.
 ## Quick start
 Test whether a parameter `x` is zero, assuming its standard error is known
 
-`ebf.norm(x, se)`
+`ebf.norm(x, s)`
 
 One-sided test
 
-`ebf.norm(x, se, h1=c(0, Inf))`
+`ebf.norm(x, s, h1=c(0, Inf))`
 
 Compare x>0 to x<0
 
-`ebf.norm(x, se, h0=c(-Inf,0), h1=c(0, Inf))`
+`ebf.norm(x, s, h0=c(-Inf,0), h1=c(0, Inf))`
 
 T-test with estimated standard error
 
-`ebf.t(x, se, df)`
+`ebf.t(x, s, df)`
 
 Binomial test of `k` successes in `n` trials, null hypothesis of probability 0.5
 
