@@ -49,5 +49,5 @@ ebf.t.shrink <- function(x, s, df, index, xmin, xmax, points, pi0=0, complement=
     points = points.save
   }
 
-  pml
+  pml[index]
 }

@@ -31,19 +31,19 @@ ebf.norm <- function(x,
 
   # null hypothesis
   ### point hypothesis
-  if (h0[1] == h0[2]) ebf.h0 = dnorm(x, h0[1], s)
+  if (h0[1] == h0[2]) ebf.h0 = dnorm(x[index], h0[1], s[index])
   ### interval hypothesis
-  if (h0[1] != h0[2]) ebf.h0 = ebf.norm.simple(x, s, min(h0), max(h0))
+  if (h0[1] != h0[2]) ebf.h0 = ebf.norm.simple(x[index], s[index], min(h0), max(h0))
 
   # alternative hypothesis
   if (!is.null(h1)) {
     ### point hypothesis
-    if (h1[1] == h1[2]) ebf.h1 = dnorm(x, h1[1], s)
+    if (h1[1] == h1[2]) ebf.h1 = dnorm(x[index], h1[1], s[index])
     ### interval hypothesis
-    if (h1[1] != h1[2]) ebf.h1 = ebf.norm.simple(x, s, min(h1), max(h1))
+    if (h1[1] != h1[2]) ebf.h1 = ebf.norm.simple(x[index], s[index], min(h1), max(h1))
   }
   ### complement interval
-  if (is.null(h1)) ebf.h1 = ebf.norm.simple(x, s, min(h0), max(h0), TRUE)
+  if (is.null(h1)) ebf.h1 = ebf.norm.simple(x[index], s[index], min(h0), max(h0), TRUE)
 
   # EBFs
   ebf = ebf.h1 / ebf.h0
@@ -54,14 +54,14 @@ ebf.norm <- function(x,
   if (h0[1] == h0[2]) {
     if (!is.null(h1)) {
       ### two-sided test
-      if (h1[1]==-Inf & h1[2]==Inf) p = pnorm(-abs(x-h0[1]), 0, s) *2
+      if (h1[1]==-Inf & h1[2]==Inf) p = pnorm(-abs(x[index]-h0[1]), 0, s[index]) *2
       ### one-sided positive test
-      if (h1[1]==h0[1] & h1[2]==Inf) p = pnorm(x-h0[1], 0, s, lower=F)
+      if (h1[1]==h0[1] & h1[2]==Inf) p = pnorm(x[index]-h0[1], 0, s[index], lower=F)
       ### one-sided negative test
-      if (h1[1]==-Inf & h1[2]==h0[2]) p = pnorm(x-h0[1], 0, s)
+      if (h1[1]==-Inf & h1[2]==h0[2]) p = pnorm(x[index]-h0[1], 0, s[index])
     } else {
       ### two-sided test
-      p = pnorm(-abs(x-h0[1]), 0 , s) *2
+      p = pnorm(-abs(x[index]-h0[1]), 0 , s[index]) *2
     }
   }
   p.log10 = NULL
@@ -103,7 +103,7 @@ ebf.norm <- function(x,
                                         points, pi0, TRUE)
       else
         ebf.h1.shrink = ebf.norm.shrink(x, s, index, min(h0), max(h0),
-                                      points, complement=TRUE)
+                                        points, complement=TRUE)
     }
 
     ebf.shrink = ebf.h1.shrink / ebf.h0.shrink
@@ -111,15 +111,15 @@ ebf.norm <- function(x,
   }
 
   result = data.frame(index =  index,
-                      ebf = ebf[index],
-                      ebf.units = ebf.units[index])
+                      ebf = ebf,
+                      ebf.units = ebf.units)
 
-  if (sum(!is.na(p[index])) > 0) result = data.frame(result,
-                                                     p = p[index],
-                                                     p.log10 = p.log10[index])
+  if (sum(!is.na(p)) > 0) result = data.frame(result,
+                                              p = p,
+                                              p.log10 = p.log10)
 
   if (shrink) result = data.frame(result,
-                                  ebf.shrink = ebf.shrink[index],
-                                  ebf.shrink.units = ebf.shrink.units[index])
+                                  ebf.shrink = ebf.shrink,
+                                  ebf.shrink.units = ebf.shrink.units)
   result
 }

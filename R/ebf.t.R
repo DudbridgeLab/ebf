@@ -40,20 +40,20 @@ ebf.t <- function(x,
 
   # null hypothesis
   ### point hypothesis
-  if (h0[1] == h0[2]) ebf.h0 = dt((x - h0[1]) /s, df) / s
+  if (h0[1] == h0[2]) ebf.h0 = dt((x[index] - h0[1]) /s[index], df[index]) / s[index]
 
   ### interval hypothesis
-  if (h0[1] != h0[2]) ebf.h0 = ebf.t.simple(x, s, min(h0), max(h0), df)
+  if (h0[1] != h0[2]) ebf.h0 = ebf.t.simple(x[index], s[index], min(h0), max(h0), df[index])
 
   # alternative hypothesis
   if (!is.null(h1)) {
     ### point hypothesis
-    if (h1[1] == h1[2]) ebf.h1 = dt((x - h1[1]) / s, df) / s
+    if (h1[1] == h1[2]) ebf.h1 = dt((x[index] - h1[1]) / s[index], df[index]) / s[index]
     ### interval hypothesis
-    if (h1[1] != h1[2]) ebf.h1 = ebf.t.simple(x, s, min(h1), max(h1), df)
+    if (h1[1] != h1[2]) ebf.h1 = ebf.t.simple(x[index], s[index], min(h1), max(h1), df[index])
   }
   ### complement interval
-  if (is.null(h1)) ebf.h1 = ebf.t.simple(x, s, min(h0), max(h0), df, TRUE)
+  if (is.null(h1)) ebf.h1 = ebf.t.simple(x[index], s[index], min(h0), max(h0), df[index], TRUE)
 
   # EBFs
   ebf = ebf.h1 / ebf.h0
@@ -64,14 +64,14 @@ ebf.t <- function(x,
   if (h0[1] == h0[2]) {
     if (!is.null(h1)) {
       ### two-sided test
-      if (h1[1]==-Inf & h1[2]==Inf) p = pt(-abs(x-h0[1]) / s, df) *2
+      if (h1[1]==-Inf & h1[2]==Inf) p = pt(-abs(x[index]-h0[1]) / s[index], df[index]) *2
       ### one-sided positive test
-      if (h1[1]==h0[1] & h1[2]==Inf) p = pt((x-h0[1]) / s, df, lower=F)
+      if (h1[1]==h0[1] & h1[2]==Inf) p = pt((x[index]-h0[1]) / s[index], df[index], lower=F)
       ### one-sided negative test
-      if (h1[1]==-Inf & h1[2]==h0[2]) p = pt((x-h0[2]) / s, df)
+      if (h1[1]==-Inf & h1[2]==h0[2]) p = pt((x[index]-h0[2]) / s[index], df[index])
     } else {
       ### two-sided test
-      p = pt(-abs(x-h0[1]) / s, df) *2
+      p = pt(-abs(x[index]-h0[1]) / s[index], df[index]) *2
     }
   }
   p.log10 = NULL
@@ -122,16 +122,16 @@ ebf.t <- function(x,
   }
 
   result = data.frame(index =  index,
-                      ebf = ebf[index],
-                      ebf.units = ebf.units[index])
+                      ebf = ebf,
+                      ebf.units = ebf.units)
 
-  if (sum(!is.na(p[index])) > 0) result = data.frame(result,
-                                                     p = p[index],
-                                                     p.log10 = p.log10[index])
+  if (sum(!is.na(p)) > 0) result = data.frame(result,
+                                                     p = p,
+                                                     p.log10 = p.log10)
 
   if (shrink) result = data.frame(result,
-                                  ebf.shrink = ebf.shrink[index],
-                                  ebf.shrink.units = ebf.shrink.units[index])
+                                  ebf.shrink = ebf.shrink,
+                                  ebf.shrink.units = ebf.shrink.units)
 
   result
 }
