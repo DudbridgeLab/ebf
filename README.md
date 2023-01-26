@@ -3,7 +3,7 @@
 
 An empirical Bayes factor (EBF) is one in which the distribution of parameters is estimated from the data in some way.
 Here we use posterior distributions derived from vague priors, with adjustment for using the data twice:
-first to estimate the posterior and then again to calculate the Bayes factor.  The concept is similar to that of Watanabe's
+first to estimate the posterior and then again to calculate the Bayes factor.  The concept is similar to Watanabe's
 widely applicable information criterion (WAIC), and in some cases the EBF and WAIC are identical.
 
 Informally an EBF is the Bayes factor we would expect in an independent replication of the experiment, using the posterior
