@@ -9,7 +9,8 @@ widely applicable information criterion (WAIC), and in some cases the EBF and WA
 Informally an EBF is the Bayes factor we would expect in an independent replication of the experiment, using the posterior
 from the present data as the new prior.  Inferences from EBFs are therefore expected to replicate.
 But in classical testing scenarios the EBF can also have a fixed sampling distribution under
-the null hypothesis.  It is therefore interpretable under frequentist, Bayesian and information perspectives,
+the null hypothesis.  Indeed an approximate general conversion from p-values is EBF=10p.
+The EBF is therefore interpretable under frequentist, Bayesian and information perspectives,
 while standing itself as a measure of evidence.
 
 The following argument gives a calibration of EBF to p-values that reflects intuitions.  Define weaker belief to be
