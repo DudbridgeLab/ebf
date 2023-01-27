@@ -26,10 +26,6 @@ The numbers of events are contained in \code{x}.}
 \item{index}{Vector of indices in \code{x}.  EBFs are calculated for
 those elements only. If \code{NULL}, EBFs are calculated for all elements.}
 
-\item{h0}{If a scalar, the value of a point null hypothesis.
-If a vector with two elements, the lower and upper
-bounds of the null hypothesis.}
-
 \item{h1}{If a scalar, the value of a point alternative hypothesis.
 If a vector with two elements, the lower and upper bounds of
 the alternative hypothesis.  If \code{NULL} (default), the alternative
@@ -91,10 +87,8 @@ other tests.  The default \code{pi0=0} assumes that the hypothesis is true
 for all tests.  If \code{pi0=1}, the single-test EBF is recovered.
 }
 \references{
-Dudbridge F (2022) A scale of interpretation for likelihood ratios and Bayes factors.
-arXiv:2212.06669
-
-Dudbridge F (in preparation) Empirical Bayes factors for common hypothesis tests.
+Dudbridge F (2023) Empirical Bayes factors for common hypothesis tests.
+arXiv:2301.11057
 }
 \author{
 Frank Dudbridge

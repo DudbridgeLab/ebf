@@ -7,6 +7,8 @@
 #' there is no reason why it should hold exactly, and this EBF should
 #' only be calculated when the p-value is the only available statistic.
 #'
+#' For small P-values, the EBF is approximately 1/10p.
+#'
 #' @template allParams
 #' @template shrinkParams
 #'

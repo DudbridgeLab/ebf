@@ -1,7 +1,3 @@
-#' @param h0 If a scalar, the value of a point null hypothesis.
-#' If a vector with two elements, the lower and upper
-#' bounds of the null hypothesis.
-#'
 #' @param shrink If \code{TRUE}, shrinks EBFs to a posterior
 #' distribution estimated from all the elements of \code{x}.
 #'

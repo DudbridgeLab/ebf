@@ -18,10 +18,8 @@ Sample sizes range from 1 to 100.
 The uniform prior is used.
 }
 \references{
-Dudbridge F (2022) A scale of interpretation for likelihood ratios and Bayes factors.
-arXiv:2212.06669
-
-Dudbridge F (in preparation) Empirical Bayes factors for common hypothesis tests.
+Dudbridge F (2023) Empirical Bayes factors for common hypothesis tests.
+arXiv:2301.11057
 }
 \author{
 Frank Dudbridge

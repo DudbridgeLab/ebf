@@ -18,10 +18,6 @@ distribution estimated from all the elements of \code{x}.}
 \item{points}{Vector of indices in \code{x} to use in estimating shrinkage EBFs.}
 
 \item{pi0}{Proportion of true null hypotheses in shrinkage EBFs.}
-
-\item{h0}{If a scalar, the value of a point null hypothesis.
-If a vector with two elements, the lower and upper
-bounds of the null hypothesis.}
 }
 \value{
 A data frame containing the following components:
@@ -48,6 +44,8 @@ a uniform prior on b from 1 to infinity.  Although this model is flexible,
 there is no reason why it should hold exactly, and this EBF should
 only be calculated when the p-value is the only available statistic.
 
+For small P-values, the EBF is approximately 1/10p.
+
 EBFs are calculated in favour of \code{h1}.
 
 For shrinkage EBFs, each test is evaluated using the posterior distribution
@@ -67,10 +65,8 @@ other tests.  The default \code{pi0=0} assumes that the hypothesis is true
 for all tests.  If \code{pi0=1}, the single-test EBF is recovered.
 }
 \references{
-Dudbridge F (2022) A scale of interpretation for likelihood ratios and Bayes factors.
-arXiv:2212.06669
-
-Dudbridge F (in preparation) Empirical Bayes factors for common hypothesis tests.
+Dudbridge F (2023) Empirical Bayes factors for common hypothesis tests.
+arXiv:2301.11057
 }
 \author{
 Frank Dudbridge

@@ -1,3 +1,7 @@
+#' @param h0 If a scalar, the value of a point null hypothesis.
+#' If a vector with two elements, the lower and upper
+#' bounds of the null hypothesis.
+#'
 #' @param h1 If a scalar, the value of a point alternative hypothesis.
 #' If a vector with two elements, the lower and upper bounds of
 #' the alternative hypothesis.  If \code{NULL} (default), the alternative
