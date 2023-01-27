@@ -61,6 +61,5 @@ Chi-square test
 
 ## Citations
 
-Dudbridge F (2022) A scale of interpretation for likelihood ratios and Bayes factors.  arXiv:2212.06669
+Dudbridge F (2023) Empirical Bayes factors for common hypothesis tests. arXiv:2301.11057
 
-Dudbridge F (2023) Empirical Bayes factors.  Submitted.
