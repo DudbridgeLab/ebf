@@ -13,7 +13,7 @@ the null hypothesis.  Indeed an approximate general conversion from p-values is 
 The EBF is therefore interpretable under frequentist, Bayesian and information perspectives,
 while standing itself as a measure of evidence.
 
-The following argument gives a calibration of EBF to p-values that reflects intuitions (Dudbridge 2023).  Define weaker belief to be
+The following argument gives a calibration of EBFs that reflects intuitions (Dudbridge 2023).  Define weaker belief to be
 a probability that is easily changed by a Bayes factor, and stronger belief as probability that is less easily changed.
 The sharpest distinction between weaker and stronger belief is where the third derivative of the logistic function is zero.
 This corresponds to probability 0.789, and with that boundary a Bayes factor of 3.73 would update any weaker belief to a stronger belief.
