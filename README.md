@@ -32,7 +32,7 @@ To install within R, `devtools::install_github("DudbridgeLab/ebf").`
 For main documentation, `help(ebf::ebf)`.
 
 ## Quick start
-Test whether a parameter `x` is zero, assuming its standard error is known
+Test whether a parameter `x` is zero, assuming its standard error `s` is known
 
 `ebf.norm(x, s)`
 
