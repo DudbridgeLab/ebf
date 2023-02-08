@@ -31,6 +31,8 @@ To install within R, `devtools::install_github("DudbridgeLab/ebf").`
 
 For main documentation, `help(ebf::ebf)`.
 
+Here is a [bite-size introduction to EBFs](https://www.youtube.com/watch?v=oevpGRQJBwA&list=PLxBVv2Q53n5JP4lKwLiR1BhR69OsrJKsg).
+
 ## Quick start
 Test whether a parameter `x` is zero, assuming its standard error `s` is known
 
@@ -60,7 +62,7 @@ Chi-square test
 
 `ebf.chisq(chisq, df)`
 
-## Citations
+## Citation
 
-Dudbridge F (2023) Empirical Bayes factors for common hypothesis tests. arXiv:2301.11057
+Dudbridge F (2023) Empirical Bayes factors for common hypothesis tests. [arXiv:2301.11057](https://arxiv.org/abs/2301.11057)
 
