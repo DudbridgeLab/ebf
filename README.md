@@ -31,7 +31,8 @@ To install within R, `devtools::install_github("DudbridgeLab/ebf").`
 
 For main documentation, `help(ebf::ebf)`.
 
-Here is a [bite-size introduction to EBFs](https://www.youtube.com/watch?v=oevpGRQJBwA&list=PLxBVv2Q53n5JP4lKwLiR1BhR69OsrJKsg).
+Here are a [bite-size introduction to EBFs](https://www.youtube.com/watch?v=oevpGRQJBwA&list=PLxBVv2Q53n5JP4lKwLiR1BhR69OsrJKsg)
+and a [full-length live seminar](https://www.youtube.com/watch?v=3vbr1tNDVT0&t=84s).
 
 ## Quick start
 Test whether a parameter `x` is zero, assuming its standard error `s` is known
